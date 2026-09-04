@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <title>课程反馈</title></title>
+    </head>
+    
+    <body>
+        <header>
+        <h1>课程反馈</h1>
+        <p>您的意见直接改进下一次授课</p>        
+        </header>
+        <nar>
+            <a href="#intro">填写说明</a>
+            <a href="#form">开始填写</a>
+        </nar>
+        <main>
+            <section id="intro">
+                <h2>填写说明</h2>
+                <p>匿名收集，仅用于改进教学，两分钟填完</p>
+                <form action="#" method="get">
+                    <p>
+                        <laber for="name">姓名（可选 昵称）</laber>
+                        <input type="text" id="name" name="name" placeholder="怎么称呼你" required>
+                    </p>
+                    <p>
+                        <label for="mail">邮箱（可选）</label>
+                        <input type="email" id="mail" name="mail" placeholder="方便联系你" required>
+                    </p>
+                    <p>课程评分</p>
+                    <P>
+                        <label><input type="radio" name="score" value="5" required> 很好</label>
+                        <label><input type="radio" name="score" value="4"> 较好</label>
+                        <label><input type="radio" name="score" value="3"> 一般
+                    </P>
+                    <p>
+                        想深入的主题（可多选）
+                    </p>
+                    <P>
+                        <laber for="advice">具体建议</laber>
+                        <textarea id="advice" name="advice" rows="4" cols="200" maxlength="200" placeholder="说点什么"></textarea>
+                    </P>
+                    <p>
+                        <button type="submit">提交反馈</button>
+                    </p>
+                </form>
+            </section>
+        </main>
+        <footer>
+            <p>软件开发综合实践·课堂演示案例</p>
+        </footer>
+    </body>
+</html>
