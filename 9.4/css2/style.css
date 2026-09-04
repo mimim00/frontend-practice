@@ -1,0 +1,107 @@
+*{
+    box‑sizing: border‑box;
+    margin:0;
+    padding:0;
+}
+body{
+    max‑width: 800px;
+    margin: 2rem auto;
+    padding:0 1rem;
+    font‑family: "Microsoft Yahei",sans‑serif;
+    line‑height:1.6;
+    background:#f7f9fc;
+    color:#222;
+}
+
+header{
+    text‑align:center;
+    margin‑bottom:1rem;
+}
+nav{
+    display:flex;
+    gap:2rem;
+    justify‑content:center;
+    margin‑bottom:2rem;
+}
+nav a{
+    text‑decoration:none;
+    color:#2b5797;
+}
+section{
+    background:#fff;
+    padding:24px;
+    border‑radius:10px;
+    box‑shadow:0 1px 6px #0000001a;
+    margin‑bottom:20px;
+}
+details{
+    border:1px solid #ccc;
+    padding:10px;
+    border‑radius:6px;
+    margin‑bottom:16px;
+}
+fieldset{
+    border:1px solid #aaa;
+    padding:16px;
+    border‑radius:8px;
+    margin‑bottom:18px;
+}
+legend{
+    font‑weight:bold;
+    padding:0 8px;
+}
+.item{
+    margin‑bottom:14px;
+}
+label{
+    display:block;
+    margin‑bottom:4px;
+}
+input,select,textarea{
+    width:100%;
+    padding:8px 10px;
+    border:1px solid #aaa;
+    border‑radius:4px;
+    font‑size:1rem;
+}
+textarea{
+    min‑height:80px;
+    resize:vertical;
+}
+.btns{
+    display:flex;
+    gap:1rem;
+    margin‑top:20px;
+}
+button{
+    padding:10px 24px;
+    border:none;
+    border‑radius:6px;
+    cursor:pointer;
+}
+button[type="submit"]{
+    background:#2b5797;
+    color:white;
+}
+button[type="reset"]{
+    background:#ddd;
+}
+footer{
+    text‑align:center;
+    margin‑top:2rem;
+    color:#666;
+    font‑size:0.9rem;
+}
+
+/* 任务1 纯CSS伪类 :valid :invalid :focus，无JS */
+input:focus,select:focus,textarea:focus{
+    outline: 2px solid #4080ff;
+    border‑color:#4080ff;
+}
+input:invalid:not(:focus):not(:placeholder‑shown),
+textarea:invalid:not(:focus):not(:placeholder‑shown){
+    border:2px solid #e53935;
+}
+input:valid,textarea:valid{
+    border:1px solid #2e7d32;
+}
