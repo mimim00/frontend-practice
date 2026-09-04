@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="zh‑CN">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF‑8">
+    <meta charset="UTF-8">
     <title>班主任学生信息采集表</title>
     <link rel="stylesheet" href="css2/style.css">
 </head>
@@ -22,7 +22,7 @@
         <h2>学生个人信息填报</h2>
         <!-- 任务3 details+summary 折叠填写说明 -->
         <details open>
-            <summary>📝填写说明（点击收起/展开）</summary>
+            <summary>填写说明（点击收起/展开）</summary>
             <p>本表单由班主任收集班级档案使用；手机号、家长信息仅用于校内联系，严格保密。</p>
         </details>
 
@@ -30,27 +30,22 @@
             <!-- 任务2 fieldset + legend 表单分组 -->
             <fieldset>
                 <legend>学生基础身份信息</legend>
-
                 <div class="item">
                     <label for="username">学生姓名 *</label>
                     <input type="text" id="username" name="username" required maxlength="10">
                 </div>
-
                 <div class="item">
                     <label for="stuId">学号 *</label>
-                    <input type="text" id="stuId" name="stuId" required pattern="^[0‑9]{10}$" placeholder="10位数字学号">
+                    <input type="text" id="stuId" name="stuId" required pattern="^[0-9]{10}$" placeholder="10位数字学号">
                 </div>
-
                 <div class="item">
                     <label for="email">学生邮箱 *</label>
                     <input type="email" id="email" name="email" required>
                 </div>
-
                 <div class="item">
                     <label for="phone">本人手机号 *</label>
-                    <input type="text" id="phone" name="phone" required pattern="^1[3‑9]\d{9}$">
+                    <input type="text" id="phone" name="phone" required pattern="^1[3-9]\d{9}$">
                 </div>
-
                 <div class="item">
                     <label>性别</label>
                     <div>
@@ -58,7 +53,6 @@
                         <label><input type="radio" name="gender" value="female">女</label>
                     </div>
                 </div>
-
                 <div class="item">
                     <label for="birth">出生日期</label>
                     <input type="date" id="birth" name="birth">
@@ -76,25 +70,17 @@
                         <option value="rent">校外租房</option>
                     </select>
                 </div>
-
-                <div class="item">
-                    <label>在校可联系时段（多选）</label>
-                    <div>
-                        <label><input type="checkbox" name="avail" value="day">白天上课时段</label>
-                        <label><input type="checkbox" name="avail" value="evening">晚间课余时段</label>
-                    </div>
-                </div>
+               
             </fieldset>
 
             <fieldset id="contact">
-                <legend>家庭紧急联系与补充</legend>
+                <legend>家庭特殊情况与补充</legend>
                 <div class="item">
                     <label for="familyDesc">家庭情况简要备注 *</label>
                     <textarea id="familyDesc" name="familyDesc" required maxlength="200"></textarea>
                 </div>
-
                 <div class="item">
-                    <label for="queryPwd">档案查询密码 *</label>
+                    <label for="queryPwd">其他情况*</label>
                     <input type="password" id="queryPwd" name="queryPwd" required minlength="6" maxlength="16">
                 </div>
             </fieldset>
