@@ -9,7 +9,7 @@ body {
     background-color: #f8f9fa;
     max-width: 640px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 16px;
 
 }
 
@@ -18,18 +18,19 @@ header{
 }
 nar{
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 nar a {
     color: #007bff;
     text-decoration: none;
-    margin: 0 10px;
+    margin: 0 8px;
 }
 section {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     background-color: #fff;
-    border-radius: 5px;
-    padding: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 16px;
 
 }
 
@@ -38,8 +39,13 @@ input,textarea,select,button {
     padding: 8px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 4px;
 }
+label[for="advice"] {
+    display: block;
+    margin-bottom: 5px;
+}
+
  button {
     background-color: #007bff;
     color: #fff;
