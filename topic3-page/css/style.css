@@ -56,7 +56,7 @@ img { max-width: 100%; height: auto; }
 /* ---------- 今日课表：Flex 时间轴（序号 + 课程卡片） ---------- */
 .timeline { list-style: none; padding: 0; margin: 0; }
 .timeline-item {
-  display: flex;            /* 一维排列：节次徽标 + 课程卡片 */
+  display: flex;            /* 一维排列：节次标 + 课程卡片 */
   align-items: flex-start;
   gap: 12px;
   margin-bottom: 12px;
@@ -68,9 +68,9 @@ img { max-width: 100%; height: auto; }
   border-radius: 6px;
 }
 
-/* ---------- 作业卡片墙：Grid auto-fit + minmax（本课核心语句） ----------
-   读法：每列最窄 240px，放得下就自动加列，
-   桌面三列、平板两列、手机单列，无需写媒体查询 */
+/* ---------- 试卷卡片墙：Grid auto-fit + minmax（本课核心语句） ----------
+  每列最窄 240px，放得下就自动加列，
+  桌面三列、平板两列、手机单列，无需写媒体查询 */
 .hw-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
