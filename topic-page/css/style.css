@@ -1,0 +1,135 @@
+
+:root {
+  --brand: #304d78;        /* 品牌主色 */
+  --brand-dark: #4d6fa2;   /* 品牌深色 */
+  --bg-soft: #f4f6fa;      /* 页面浅底 */
+  --text-main: #150b0b;       /* 正文颜色 */
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", sans-serif;
+  margin: 0;
+  color: var(--text-main);
+  background-color: var(--bg-soft);
+}
+
+/* 弹性图片：页面中任何图片永不超出容器（本课红线规则） */
+img { max-width: 100%; height: auto; }
+
+/* ---------- 导航栏：用自定义类覆盖框架，不改 Bootstrap 源文件 ---------- */
+.site-navbar {
+  background: linear-gradient(90deg, var(--brand), var(--brand-dark));
+}
+.site-navbar .navbar-brand,
+.site-navbar .nav-link { color: #fff; }
+.site-navbar .nav-link:hover { color: #e6f0ff; }
+.site-navbar .nav-link.active {
+  font-weight: 700;
+  border-bottom: 2px solid #fff;
+}
+.brand-icon { margin-right: 4px; }
+
+/* ---------- 流式排版（研究任务1）：clamp() 标题字号随窗口平滑缩放 ---------- */
+.section-title {
+  font-size: clamp(1.3rem, 1.05rem + 1.2vw, 1.8rem);
+  font-weight: 700;
+}
+
+/* ---------- 统计卡片 ---------- */
+.stat-card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(82, 132, 207, 0.08);
+}
+.stat-label { margin-bottom: 2px; font-size: 0.9rem; color: #6c757d; }
+.stat-num {
+  font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.1rem);
+  font-weight: 700;
+  color: var(--brand);
+  margin: 0;
+}
+.stat-unit { font-size: 0.85rem; color: #6c757d; font-weight: 400; margin-left: 2px; }
+.stat-tip { font-size: 0.8rem; margin-bottom: 0; }
+
+/* ---------- 今日课表：Flex 时间轴（序号 + 课程卡片） ---------- */
+.timeline { list-style: none; padding: 0; margin: 0; }
+.timeline-item {
+  display: flex;            /* 一维排列：节次徽标 + 课程卡片 */
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.lesson-no { flex-shrink: 0; margin-top: 12px; }
+.lesson-card { flex: 1; }
+.lesson-card .card-body {
+  border-left: 4px solid var(--brand);
+  border-radius: 6px;
+}
+
+/* ---------- 作业卡片墙：Grid auto-fit + minmax（本课核心语句） ----------
+   读法：每列最窄 240px，放得下就自动加列，
+   桌面三列、平板两列、手机单列，无需写媒体查询 */
+.hw-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+.hw-card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+.hw-card .card-title { font-size: 1rem; }
+
+/* ---------- 班级之星 ---------- */
+.star-card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+.rank-emoji { font-size: 2.2rem; line-height: 1; }
+
+/* ---------- 页脚 ---------- */
+.site-footer {
+  background-color: #fff;
+  border-top: 1px solid #e9ecef;
+  font-size: clamp(0.8rem, 0.75rem + 0.2vw, 0.9rem);
+}
+
+/* ================= 断点 1：平板 ≥768px ================= */
+@media (min-width: 768px) {
+  .hw-grid { gap: 20px; }
+}
+
+/* ================= 断点 2：桌面 ≥992px ================= */
+@media (min-width: 992px) {
+  .container { max-width: 1100px; }  /* 上限宽度可用，非固定死宽 */
+  .hw-grid { gap: 24px; }
+  .timeline { padding: 0 12px; }
+}
+
+/* ================= 深色模式（研究任务2）：跟随系统自动切换 ================= */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-soft: #1b1e23;
+    --text-main: #e8eaed;
+  }
+  body { background-color: var(--bg-soft); color: var(--text-main); }
+  .card { background-color: #262a31; border-color: #3a3f45; }
+  body .text-muted { color: #9aa0a6; }
+  .list-group-item { background-color: #262a31; color: var(--text-main); border-color: #3a3f45; }
+  .stat-card, .hw-card, .star-card { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45); }
+  .site-footer { background-color: #1f2329; border-top-color: #3a3f45; }
+  .site-navbar { background: linear-gradient(90deg, #254473, #254678); }
+}
+
+/* ================= 打印样式（研究任务3）：隐藏导航与页脚、正文单栏 ================= */
+@media print {
+  .site-navbar,
+  .site-footer { display: none !important; }
+  body { background: #fff; color: #000; }
+  .hw-grid { grid-template-columns: 1fr; }
+  .card { box-shadow: none; border: 1px solid #ccc; }
+}
