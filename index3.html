@@ -20,8 +20,40 @@
             <section id="courses">
                 <h2>全部课程</h2>
                 <div>
-                   <!--卡片下一次填--> 
+                   <article>
+                    <h3>HTML入门</h3>
+                    <p>结构与语义，页面一切的起点</p>
+                    <a href="#">查看详情</a>
+                    </article>
+                    <article>
+                        <h3>css布局</h3>
+                        <p>Flex、Grid与响应式设计</p>
+                        <a href="#">查看详情</a>
+                    </article>
+                    <article>
+                        <h3>JavaScript基础</h3>
+                        <p>让页面动起来的第一门语言</p>
+                        <a href="#">查看详情</a>  
+                    </article>  
                 </div>
+                .card-grid {
+                    max-width: 960px;
+                    margin: 0 auto;
+                    padding: 16px;
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                    gap: 16px;
+                }
+                .course-card {
+                    border: 1px solid #dee2e6;
+                    border-radius: 8px;
+                    padding: 16px;
+                }
+                @media (max-width: 992px) {
+                    .course-card {
+                        padding: 24px;
+                    }
+                }
             </section>
         </main>
         <footer><p>
