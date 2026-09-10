@@ -3,7 +3,7 @@ const countWords = (text) => {
     if (typeof text !== 'string' || text.trim() === '') {
         return {};
     }
-    // 转小写按空白字符分割，过滤空字符串
+    // 转小写，按空白字符分割
     const words = text.toLowerCase().split(/\s+/).filter(word => word !== '');
     // reduce 累计计数
     return words.reduce((countObj, word) => {
