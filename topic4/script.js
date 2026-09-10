@@ -61,3 +61,30 @@ try {
 } catch (e) {
     console.error("记账工具运行出错：", e.message);
 }
+/**交互式输入新账单(ai 辅助) */
+try {
+    const inputTitle = prompt("请输入消费名称：");
+    // 用户点击取消则终止
+    if (inputTitle === null) {
+        console.log("用户取消输入");
+    } else {
+        const inputCategory = prompt("请输入消费类别（餐饮/交通/购物）：") || "";
+        const inputMoneyStr = prompt("请输入消费金额：");
+        const inputMoney = Number(inputMoneyStr);
+
+        // 构造新账单对象
+        const newBill = {
+            title: inputTitle,
+            category: inputCategory,
+            money: inputMoney,
+            time: new Date().toISOString().slice(0, 10)
+        };
+
+        // 添加到账单数组
+        bills.push(newBill);
+        console.log("====添加新记录后的最新报告====");
+        console.log(getBillReport(bills));
+    }
+} catch (err) {
+    console.error("交互输入出错：", err.message);
+}
