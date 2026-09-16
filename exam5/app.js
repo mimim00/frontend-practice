@@ -4,13 +4,17 @@ const input = document.querySelector('#task-input');
 const tip = document.querySelector('#tip');
 const filters = document.querySelector('.filters');
 
-let tasks = [];
+// 页面加载：从localStorage恢复任务；没有数据用空数组
+let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
 let currentFilter = 'all';
+
+// 保存到本地存储
+const save = () => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+};
 
 const render = () => {
     list.innerHTML = '';
-    console.log("=====执行render(),清空列表，重建所有li====");
-
     const shown = tasks.filter(t => {
         if (currentFilter === 'all') return true;
         if (currentFilter === 'active') return !t.done;
@@ -31,14 +35,12 @@ const render = () => {
             li.classList.add('done');
         }
 
-        // ✅ 在render内部，每一轮新建li就绑定click
         li.addEventListener('click', () => {
-            console.log('触发任务点击，切换done状态，old:', task.done);
             task.done = !task.done;
+            save(); // 修改数组，先保存
             render();
         });
 
-        // 删除按钮
         const delBtn = document.createElement('span');
         delBtn.className = 'del';
         delBtn.textContent = '[删除]';
@@ -46,6 +48,7 @@ const render = () => {
             e.stopPropagation();
             const idx = tasks.indexOf(task);
             tasks.splice(idx, 1);
+            save(); // 删除后保存
             render();
         });
 
@@ -54,7 +57,6 @@ const render = () => {
     });
 };
 
-// 添加任务
 form.addEventListener('submit', (e) => {
     e.preventDefault();
     const text = input.value.trim();
@@ -63,15 +65,14 @@ form.addEventListener('submit', (e) => {
         return;
     }
     tasks.push({ text: text, done: false });
+    save(); // 添加任务后保存
     tip.textContent = '';
     input.value = '';
     render();
 });
 
-// 过滤按钮
 filters.addEventListener('click', (e) => {
     if (e.target.tagName !== 'BUTTON') return;
-    console.log("点击过滤按钮，filter=", e.target.dataset.filter);
     currentFilter = e.target.dataset.filter;
     render();
 });
