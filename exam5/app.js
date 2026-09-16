@@ -1,51 +1,79 @@
-// 获取页面元素
 const list = document.querySelector('#task-list');
 const form = document.querySelector('#add-form');
 const input = document.querySelector('#task-input');
 const tip = document.querySelector('#tip');
+const filters = document.querySelector('.filters');
 
-// 状态数组：唯一数据源
 let tasks = [];
+let currentFilter = 'all';
 
-/**
- * 渲染函数：根据tasks数组重新绘制页面列表
- */
 const render = () => {
     list.innerHTML = '';
-    // 空状态提示
-    if (tasks.length === 0) {
+    console.log("=====执行render(),清空列表，重建所有li====");
+
+    const shown = tasks.filter(t => {
+        if (currentFilter === 'all') return true;
+        if (currentFilter === 'active') return !t.done;
+        if (currentFilter === 'done') return t.done;
+    });
+
+    if (shown.length === 0) {
         const li = document.createElement('li');
-        li.textContent = '暂无任务';
+        li.textContent = '没有符合条件的任务';
         list.appendChild(li);
         return;
     }
-    // 遍历数组生成列表项
-    tasks.forEach(task => {
+
+    shown.forEach(task => {
         const li = document.createElement('li');
         li.textContent = task.text;
         if (task.done) {
             li.classList.add('done');
         }
+
+        // ✅ 在render内部，每一轮新建li就绑定click
+        li.addEventListener('click', () => {
+            console.log('触发任务点击，切换done状态，old:', task.done);
+            task.done = !task.done;
+            render();
+        });
+
+        // 删除按钮
+        const delBtn = document.createElement('span');
+        delBtn.className = 'del';
+        delBtn.textContent = '[删除]';
+        delBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const idx = tasks.indexOf(task);
+            tasks.splice(idx, 1);
+            render();
+        });
+
+        li.appendChild(delBtn);
         list.appendChild(li);
     });
 };
 
-// 表单提交添加任务
+// 添加任务
 form.addEventListener('submit', (e) => {
-    e.preventDefault(); // 阻止表单默认刷新跳转
+    e.preventDefault();
     const text = input.value.trim();
-
-    // 输入校验
     if (text === '') {
         tip.textContent = '任务名不能为空';
         return;
     }
-    // 修改状态数组
     tasks.push({ text: text, done: false });
     tip.textContent = '';
-    input.value = ''; // 清空输入框
-    render(); // 重新渲染界面
+    input.value = '';
+    render();
 });
 
-// 页面初次渲染
+// 过滤按钮
+filters.addEventListener('click', (e) => {
+    if (e.target.tagName !== 'BUTTON') return;
+    console.log("点击过滤按钮，filter=", e.target.dataset.filter);
+    currentFilter = e.target.dataset.filter;
+    render();
+});
+
 render();
