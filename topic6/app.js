@@ -10,23 +10,23 @@ const loadData = async () => {
   try {
     const response = await fetch('../data/studyrooms.json');
     if (!response.ok) {
-      throw new Error('HTTP ' + response.status); // 2) HTTP 层失败
+      throw new Error('HTTP ' + response.status); 
     }
     const data = await response.json();
     if (!data.rooms || data.rooms.length === 0) {
-      $('#status').text('暂无数据').show();       // 3) 空数据
+      $('#status').text('暂无数据').show();       
       return;
     }
-    state.data = data;                            // 4) 成功
+    state.data = data;                           
     $('#sub-title').text(data.title + ' · ' + data.source);
     $('#status').hide();
     renderCards(data);
-    renderBuildingChart(data);    // 第二步新增
-    renderStatusChart(data);      // 第三步新增
-    renderBuildingFilters(data);  // 第四步新增
-    renderRoomTable(data);        // 第四步新增
+    renderBuildingChart(data);    
+    renderStatusChart(data);     
+    renderBuildingFilters(data); 
+    renderRoomTable(data);        
   } catch (error) {
-    $('#status').text('加载失败：' + error.message).show();  // 网络 / 解析失败
+    $('#status').text('加载失败：' + error.message).show();  
   }
 };
 
@@ -56,10 +56,9 @@ const renderCards = (data) => {
   });
 };
 
-/* ---------- ECharts 分组柱状图（各楼栋座位 vs 占用） ---------- */
 const renderBuildingChart = (data) => {
   const rooms = data.rooms;
-  const buildings = [...new Set(rooms.map(r => r.building))];   // 去重且保持出现顺序
+  const buildings = [...new Set(rooms.map(r => r.building))];   
   const sumByBuilding = (fn) => buildings.map(b =>
     rooms.filter(r => r.building === b).reduce((s, r) => s + fn(r), 0)
   );
@@ -79,13 +78,12 @@ const renderBuildingChart = (data) => {
   });
 };
 
-/* ---------- Chart.js 圆环图（开放状态占比） ---------- */
 const renderStatusChart = (data) => {
   const rooms = data.rooms;
   const statuses = ['开放', '维修', '闭馆'];
   const counts = statuses.map(s => rooms.filter(r => r.status === s).length);
   if (statusChart !== null) {
-    statusChart.destroy();   // 防重复初始化
+    statusChart.destroy();   
   }
   statusChart = new Chart(document.querySelector('#status-chart'), {
     type: 'doughnut',
@@ -104,7 +102,6 @@ const renderStatusChart = (data) => {
   });
 };
 
-/* ---------- jQuery 楼栋筛选 + 列表渲染 ---------- */
 const renderBuildingFilters = (data) => {
   const buildings = [...new Set(data.rooms.map(r => r.building))];
   const box = $('#building-filters');
