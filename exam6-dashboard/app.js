@@ -1,25 +1,26 @@
 
 const state = { data: null };
 
-//数据加载：四种界面状态
+let barChart = null;   
 const loadData = async () => {
-  $('#status').text('加载中...').show();          //  加载中
+  $('#status').text('加载中...').show();
   try {
     const response = await fetch('../data/books.json');
     if (!response.ok) {
-      throw new Error('HTTP ' + response.status); // HTTP 层失败
+      throw new Error('HTTP ' + response.status);
     }
     const data = await response.json();
     if (!data.series || data.series.length === 0) {
-      $('#status').text('暂无数据').show();       // 空数据
+      $('#status').text('暂无数据').show();
       return;
     }
-    state.data = data;                            // 成功
+    state.data = data;
     $('#sub-title').text(data.title + ' · ' + data.source);
     $('#status').hide();
     renderCards(data);
+    renderBarChart(data);   
   } catch (error) {
-    $('#status').text('加载失败：' + error.message).show();  // 网络 / 解析失败
+    $('#status').text('加载失败：' + error.message).show();
   }
 };
 
@@ -37,6 +38,24 @@ const renderCards = (data) => {
           </div>
         </div>
       </div>`);
+  });
+};
+
+const renderBarChart = (data) => {
+  if (barChart === null) {
+    barChart = echarts.init(document.querySelector('#bar-chart'));
+  }
+  barChart.setOption({
+    title: { text: '各月各品类借阅量', left: 'center' },
+    tooltip: { trigger: 'axis' },
+    legend: { bottom: 0 },
+    xAxis: { data: data.months },
+    yAxis: { name: '册' },
+    series: data.series.map(s => ({
+      name: s.category,
+      type: 'bar',
+      data: s.counts
+    }))
   });
 };
 
