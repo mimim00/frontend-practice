@@ -1,18 +1,12 @@
-/* ============================================================
- * 图书收藏管理 —— 自主实践任务（第五次课 第九部分）
- * 字段：书名 title / 作者 author / 评分 rating(1~5) / 状态 status
- * 功能：增、删、改（行内编辑）、查（关键词 + 状态过滤）、localStorage
- * 铁律：先改数组 → save() → render()，顺序永不反
- * ============================================================ */
 
 const STORAGE_KEY = 'books';
 
 const STATUS_TEXT = { unread: '未读', reading: '在读', done: '已读' };
 
-let books = [];              // 唯一事实来源
-let keyword = '';            // 查询关键词
-let statusFilter = 'all';    // all / unread / reading / done
-let editingId = null;        // 正在编辑哪一条（null 表示没有）
+let books = [];              
+let keyword = '';            
+let statusFilter = 'all';    
+let editingId = null;        
 
 /* ---------- 元素引用 ---------- */
 const form = document.querySelector('#book-form');
@@ -27,7 +21,6 @@ const searchInput = document.querySelector('#search');
 const filters = document.querySelector('#filters');
 const exportBtn = document.querySelector('#export');
 
-/* ---------- 小工具 ---------- */
 const stars = (n) => '★'.repeat(n) + '☆'.repeat(5 - n);
 
 const mkBtn = (label, action) => {
@@ -40,7 +33,6 @@ const mkBtn = (label, action) => {
 
 const findBook = (id) => books.find(b => b.id === id);
 
-/* ---------- localStorage：存取成对，防御性读取 ---------- */
 const save = () => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
@@ -57,7 +49,7 @@ const save = () => {
 const load = () => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    const data = raw === null ? [] : JSON.parse(raw);   // 首次访问得到空数组而不是 null
+    const data = raw === null ? [] : JSON.parse(raw);   
     books = Array.isArray(data) ? data : [];
   } catch (err) {
     console.warn('本地存档不是合法 JSON，已重置：', err.message);
@@ -66,7 +58,6 @@ const load = () => {
   }
 };
 
-/* ---------- 校验：读值 → 判空/判范围给提示 → 失败返回错误信息 ---------- */
 const validate = (data, ignoreId = null) => {
   if (data.title === '') return '书名不能为空';
   if (data.title.length > 40) return '书名不能超过 40 个字';
@@ -77,15 +68,15 @@ const validate = (data, ignoreId = null) => {
   if (books.some(b => b.title === data.title && b.id !== ignoreId)) {
     return '这本《' + data.title + '》已经在收藏里了';
   }
-  return '';   // 空字符串 = 通过
+  return '';   
 };
 
-/* ---------- 渲染 ---------- */
+
 const renderRow = (book) => {
   const li = document.createElement('li');
   li.dataset.id = book.id;
 
-  /* —— 编辑态：整行变输入框 —— */
+  
   if (book.id === editingId) {
     li.className = 'book editing';
 
@@ -122,12 +113,11 @@ const renderRow = (book) => {
     return li;
   }
 
-  /* —— 展示态 —— */
   li.className = 'book' + (book.status === 'done' ? ' done' : '');
 
   const title = document.createElement('span');
   title.className = 'title';
-  title.textContent = book.title;          // 用户输入一律 textContent
+  title.textContent = book.title;          
 
   const meta = document.createElement('span');
   meta.className = 'meta';
@@ -138,7 +128,7 @@ const renderRow = (book) => {
 };
 
 const render = () => {
-  list.replaceChildren();   // 清空旧界面
+  list.replaceChildren();   
 
   const kw = keyword.trim().toLowerCase();
   const shown = books.filter(b => {
@@ -163,7 +153,6 @@ const render = () => {
 
   shown.forEach(book => list.appendChild(renderRow(book)));
 
-  // 进入编辑态后把焦点放到书名输入框（render 会重建元素，必须重画后再聚焦）
   if (editingId !== null) {
     const el = list.querySelector(`li[data-id="${editingId}"] input[data-field="title"]`);
     if (el) {
@@ -173,7 +162,6 @@ const render = () => {
   }
 };
 
-/* ---------- 添加 ---------- */
 form.addEventListener('submit', (e) => {
   e.preventDefault();                      
   const data = {
@@ -189,12 +177,12 @@ form.addEventListener('submit', (e) => {
     return;
   }
 
-  books.push({ id: Date.now(), ...data });   // 1. 先改数组
-  save();                                    // 2. 再存
+  books.push({ id: Date.now(), ...data });   
+  save();                                    
   form.reset();
   statusInput.value = 'unread';
   tip.textContent = '';
-  render();                                  // 3. 再重画
+  render();                                 
   titleInput.focus();
 });
 
@@ -210,13 +198,13 @@ const commitEdit = (id) => {
     status: li.querySelector('[data-field="status"]').value
   };
 
-  const err = validate(data, id);            // 去重时排除自己
+  const err = validate(data, id);            
   if (err) {
     tip.textContent = err;
     return;
   }
 
-  Object.assign(findBook(id), data);         // 改数组里的对象
+  Object.assign(findBook(id), data);         
   editingId = null;
   tip.textContent = '';
   save();
@@ -240,10 +228,10 @@ list.addEventListener('click', (e) => {
   }
 
   if (action === 'delete') {
-    books = books.filter(b => b.id !== id);  // 1. 改数组
+    books = books.filter(b => b.id !== id);  
     if (editingId === id) editingId = null;
-    save();                                  // 2. 存
-    render();                                // 3. 画
+    save();                                  
+    render();                                
     return;
   }
 
@@ -259,7 +247,6 @@ list.addEventListener('click', (e) => {
   }
 });
 
-/* 编辑态里回车保存、Esc 取消 */
 list.addEventListener('keydown', (e) => {
   const li = e.target.closest('li');
   if (!li || Number(li.dataset.id) !== editingId) return;
@@ -273,7 +260,6 @@ list.addEventListener('keydown', (e) => {
   }
 });
 
-/* ---------- 查询：关键词实时过滤 + 状态过滤 ---------- */
 searchInput.addEventListener('input', () => {
   keyword = searchInput.value;
   render();
@@ -289,7 +275,7 @@ filters.addEventListener('click', (e) => {
   render();
 });
 
-/* ---------- 导出 JSON（研究任务 2：Blob + createObjectURL） ---------- */
+/* 导出 JSON（研究任务 2：Blob + createObjectURL）  */
 exportBtn.addEventListener('click', () => {
   const blob = new Blob([JSON.stringify(books, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);     // 生成一个临时 blob: 地址
@@ -302,6 +288,6 @@ exportBtn.addEventListener('click', () => {
   URL.revokeObjectURL(url);                  // 用完立刻释放，避免内存泄漏
 });
 
-/* ---------- 启动：先恢复数据，再画第一屏 ---------- */
+/* 启动：先恢复数据，再画第一屏 */
 load();
 render();
