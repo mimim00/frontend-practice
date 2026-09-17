@@ -198,7 +198,7 @@ form.addEventListener('submit', (e) => {
   titleInput.focus();
 });
 
-/* ---------- 编辑提交 ---------- */
+
 const commitEdit = (id) => {
   const li = list.querySelector(`li[data-id="${id}"]`);
   if (!li) return;
