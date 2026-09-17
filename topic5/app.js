@@ -223,7 +223,7 @@ const commitEdit = (id) => {
   render();
 };
 
-/* ---------- 事件委托：增删改查的所有按钮只在 ul 上挂一个监听器 ---------- */
+
 list.addEventListener('click', (e) => {
   const btn = e.target.closest('button[data-action]');
   if (!btn) return;
