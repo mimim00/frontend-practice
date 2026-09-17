@@ -139,19 +139,16 @@ const renderRoomTable = (data) => {
   }
 };
 
-/* 事件委托：楼栋筛选（jQuery 内置 on 第二参选择器） */
 $('#building-filters').on('click', '.btn', function () {
   currentBuilding = $(this).data('building');
-  renderBuildingFilters(state.data);   // 刷新按钮高亮
-  renderRoomTable(state.data);         // 重新过滤列表
+  renderBuildingFilters(state.data);  
+  renderRoomTable(state.data);        
 });
 
-/* 事件委托：点击列表行高亮（jQuery 类切换） */
 $('#room-body').on('click', 'tr', function () {
   $(this).toggleClass('table-primary');
 });
 
-/* ---------- 窗口自适应 ---------- */
 window.addEventListener('resize', () => {
   if (buildingChart) buildingChart.resize();
 });
