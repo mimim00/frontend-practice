@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图书收藏管理</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: sans-serif; max-width: 720px; margin: 24px auto; padding: 0 16px; color: #222; }
+    h1 { font-size: 22px; margin-bottom: 4px; }
+    .sub { color: #666; font-size: 14px; margin-top: 0; }
+    fieldset { border: 1px solid #ddd; border-radius: 6px; padding: 12px; margin-bottom: 12px; }
+    legend { padding: 0 6px; color: #1f4f7d; font-size: 14px; }
+    form .row { display: flex; flex-wrap: wrap; gap: 8px; }
+    input, select, button { padding: 6px 8px; font-size: 14px; }
+    input[type="text"], input[type="search"] { flex: 1; min-width: 120px; }
+    input[type="number"] { width: 72px; }
+    button { cursor: pointer; }
+    .tip { color: #c00; font-size: 14px; min-height: 20px; margin: 8px 0; }
+    #filters button { margin-right: 6px; }
+    #filters button.active { background: #1f4f7d; color: #fff; border-color: #1f4f7d; }
+    #count { color: #666; font-size: 14px; }
+    ul#book-list { list-style: none; padding: 0; }
+    li.book, li.empty {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 6px; border-bottom: 1px solid #eee;
+    }
+    li.empty { color: #888; justify-content: center; }
+    li.book.done .title { color: #999; }
+    .title { font-weight: 600; }
+    .meta { flex: 1; color: #666; font-size: 13px; }
+    .edit-row { display: flex; flex-wrap: wrap; gap: 6px; width: 100%; }
+    .edit-row input[data-field="title"] { flex: 1; min-width: 140px; }
+    .edit-row input[data-field="author"] { flex: 1; min-width: 100px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>图书收藏管理</h1>
+    <p class="sub">数组是唯一事实来源：先改数组 → save() → render()</p>
+  </header>
+
+  <main>
+  <fieldset>
+    <legend>添加图书</legend>
+    <form id="book-form">
+      <div class="row">
+        <input type="text" id="book-title" placeholder="书名（必填）" autocomplete="off">
+        <input type="text" id="book-author" placeholder="作者（必填）" autocomplete="off">
+        <input type="number" id="book-rating" placeholder="评分" min="1" max="5" step="1">
+        <select id="book-status">
+          <option value="unread">未读</option>
+          <option value="reading">在读</option>
+          <option value="done">已读</option>
+        </select>
+        <button type="submit">添加</button>
+      </div>
+    </form>
+    <p class="tip" id="tip"></p>
+  </fieldset>
+
+  <fieldset>
+    <legend>查询</legend>
+    <div class="row">
+      <input type="search" id="search" placeholder="按书名或作者搜索…" autocomplete="off">
+    </div>
+    <div id="filters" style="margin-top:8px">
+      <button type="button" data-status="all" class="active">全部</button>
+      <button type="button" data-status="unread">未读</button>
+      <button type="button" data-status="reading">在读</button>
+      <button type="button" data-status="done">已读</button>
+    </div>
+  </fieldset>
+
+  <p id="count"></p>
+  <ul id="book-list"></ul>
+
+  <p><button type="button" id="export">导出 JSON</button></p>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
