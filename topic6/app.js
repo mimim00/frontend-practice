@@ -1,13 +1,12 @@
 
 const state = { data: null };
 
-let currentBuilding = 'all';  // 楼栋筛选状态（第四步新增）
-let buildingChart = null;     // ECharts 实例缓存（第二步新增）
-let statusChart = null;       // Chart.js 实例缓存（第三步新增）
+let currentBuilding = 'all';  
+let buildingChart = null;     
+let statusChart = null;       
 
-/* ---------- 数据加载：四种界面状态 ---------- */
 const loadData = async () => {
-  $('#status').text('加载中...').show();          // 1) 加载中
+  $('#status').text('加载中...').show();         
   try {
     const response = await fetch('../data/studyrooms.json');
     if (!response.ok) {
