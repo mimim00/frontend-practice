@@ -175,17 +175,17 @@ const render = () => {
 
 /* ---------- 添加 ---------- */
 form.addEventListener('submit', (e) => {
-  e.preventDefault();                       // 不拦就会刷新页面
+  e.preventDefault();                      
   const data = {
     title: titleInput.value.trim(),
     author: authorInput.value.trim(),
-    rating: Number(ratingInput.value),       // 空输入 → 0 → 校验拦下
+    rating: Number(ratingInput.value),      
     status: statusInput.value
   };
 
   const err = validate(data);
   if (err) {
-    tip.textContent = err;                   // 页面提示，不是 console
+    tip.textContent = err;                   
     return;
   }
 
