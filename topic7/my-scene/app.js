@@ -1,7 +1,7 @@
 
 
 /* ---------- 0. 行星数据表：数据驱动，加一行就多一颗行星 ---------- */
-/* radius 半径 / dist 轨道半径 / speed 公转角速度 / spin 自转角速度 / color 颜色 */
+
 const PLANETS = [
   { name: '水星',   radius: 0.34, dist: 5.2,  speed: 1.55, spin: 0.006, color: 0xa9a29b, fact: '离太阳最近，公转最快，一年只有 88 天' },
   { name: '金星',   radius: 0.58, dist: 7.0,  speed: 1.15, spin: 0.004, color: 0xe6c17a, fact: '浓密二氧化碳大气，表面约 465 ℃' },
