@@ -124,8 +124,7 @@ PLANETS.forEach((cfg, i) => {
       new THREE.RingGeometry(cfg.radius * 1.4, cfg.radius * 2.3, 96),
       new THREE.MeshBasicMaterial({ color: 0xd7ccc8, side: THREE.DoubleSide, transparent: true, opacity: 0.7 })
     );
-    ring.rotation.x = -Math.PI / 2;
-    ring.rotation.z = 0.18;                     // 稍微歪一点，更真实
+    ring.rotation.x = -Math.PI / 2;                    
     mesh.add(ring);
   }
 
