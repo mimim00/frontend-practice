@@ -1,8 +1,4 @@
-/* ============================================================
- * app.js —— 自主实践：星球宇宙（太阳系）主题三维场景  ·  最终版
- * 主题：把太阳系摆进浏览器，鼠标可环绕观察、点行星看资料
- * 对应讲义第九部分任务书 8 条要求，见 lesson7/README.md 的自检表
- * ============================================================ */
+
 
 /* ---------- 0. 行星数据表：数据驱动，加一行就多一颗行星 ---------- */
 /* radius 半径 / dist 轨道半径 / speed 公转角速度 / spin 自转角速度 / color 颜色 */
@@ -36,7 +32,6 @@ document.body.appendChild(renderer.domElement);
 /* ---------- 4. 轨道控制器（研究任务一：鼠标拖拽旋转 + 滚轮缩放） ---------- */
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 0, 0);
-controls.enableDamping = true;             // 惯性阻尼：松手后还能滑一小段
 controls.dampingFactor = 0.06;
 controls.minDistance = 6;                  // 最近：贴近太阳系内部
 controls.maxDistance = 120;                // 最远：看全景
