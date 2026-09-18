@@ -2,10 +2,10 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>旋转展示台 · Three.js</title>
+<title>旋转展示台 </title>
 <style>
-  /* body 默认有 8px 外边距，不清掉画布就不会铺满，还会露出白边 */
-  body { margin: 0; overflow: hidden; background: #16213e; }
+  
+  body { margin: 0; overflow: hidden; background: #1a243e; }
   #tip {
     position: fixed; left: 14px; bottom: 12px; color: #9fb3c8;
     font: 12px/1.7 "Microsoft YaHei", sans-serif; pointer-events: none;
@@ -13,10 +13,8 @@
 </style>
 </head>
 <body>
-<div id="tip">左键拖拽旋转视角 · 滚轮缩放 · 右键平移　|　拉伸窗口画面不变形</div>
 
-<!-- 引入方式：课程离线包，先 three 再 OrbitControls，最后自己的脚本
-     注意：three-d/ 是仓库根目录下的子文件夹，所以库路径要写 ../libs/ -->
+
 <script src="../libs/three.min.js"></script>
 <script src="../libs/OrbitControls.js"></script>
 <script src="showcase.js"></script>
