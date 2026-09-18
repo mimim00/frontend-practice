@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>研究一 · OrbitControls 轨道控制器</title>
+<style>
+  body { margin: 0; overflow: hidden; background: #0b1220; font-family: "Microsoft YaHei", sans-serif; }
+  #panel {
+    position: fixed; left: 14px; top: 12px; z-index: 5; width: 280px; color: #cfd8dc;
+    background: rgba(8, 16, 28, .86); border: 1px solid #24425f; border-radius: 10px;
+    padding: 12px 14px; font-size: 13px; line-height: 1.9;
+  }
+  #panel h1 { margin: 0 0 6px; font-size: 15px; color: #4fc3f7; }
+  #panel label { display: block; cursor: pointer; }
+  #panel input[type=range] { width: 100%; }
+  #panel .row { display: flex; justify-content: space-between; color: #9fb3c8; }
+  #panel hr { border: none; border-top: 1px solid #24425f; margin: 8px 0; }
+  #readout {
+    position: fixed; right: 14px; top: 12px; z-index: 5; color: #cfd8dc;
+    background: rgba(8, 16, 28, .86); border: 1px solid #24425f; border-radius: 10px;
+    padding: 10px 14px; font: 12px/1.8 Consolas, monospace;
+  }
+  #readout b { color: #8bc34a; }
+  button {
+    background: #12263f; color: #cfe4f7; border: 1px solid #2e5f8a; border-radius: 8px;
+    padding: 5px 12px; cursor: pointer; font-size: 12px;
+  }
+</style>
+</head>
+<body>
+<div id="panel">
+  <h1>研究一：OrbitControls 关键配置</h1>
+  <label><input type="checkbox" id="cb-damping"> enableDamping 惯性阻尼</label>
+  <div class="row"><span>dampingFactor</span><span id="rng-damping-val"></span></div>
+  <input type="range" id="rng-damping" min="0.01" max="0.3" step="0.01" value="0.06">
+  <label><input type="checkbox" id="cb-pan"> enablePan 右键平移</label>
+  <label><input type="checkbox" id="cb-zoom"> enableZoom 滚轮缩放</label>
+  <label><input type="checkbox" id="cb-autorotate"> autoRotate 自动环绕</label>
+  <label><input type="checkbox" id="cb-ssp"> screenSpacePanning 屏幕空间平移</label>
+  <hr>
+  <div class="row"><span>minDistance</span><span id="rng-mind-val"></span></div>
+  <input type="range" id="rng-mind" min="1" max="10" step="0.5" value="4">
+  <div class="row"><span>maxDistance</span><span id="rng-maxd-val"></span></div>
+  <input type="range" id="rng-maxd" min="10" max="60" step="1" value="30">
+  <div class="row"><span>maxPolarAngle</span><span id="rng-polar-val"></span></div>
+  <input type="range" id="rng-polar" min="0.2" max="3.14" step="0.01" value="1.5708">
+</div>
+
+<div id="readout">
+  相机位置：<span id="cam">-</span><br>
+  距 target：<span id="dist">-</span><br>
+  change 事件次数：<b id="evt">0</b><br>
+  <button type="button" id="btn-log">把当前相机状态打到 Console</button>
+</div>
+
+<script src="../../libs/three.min.js"></script>
+<script src="../../libs/OrbitControls.js"></script>
+<script src="orbit.js"></script>
+</body>
+</html>

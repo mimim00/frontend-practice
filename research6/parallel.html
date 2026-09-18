@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>研究一：Promise.all 并行请求对比</title>
+  <link href="../libs/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container py-4">
+  <header class="mb-3">
+    <h1 class="h3">研究一：Promise.all 并行请求对比</h1>
+    <p class="text-muted">数据来源：课程统一数据集（books.json / studyrooms.json）</p>
+  </header>
+
+  <div class="mb-3">
+    <button type="button" class="btn btn-outline-primary" id="btn-serial">串行加载（一个一个来）</button>
+    <button type="button" class="btn btn-primary" id="btn-parallel">并行加载（Promise.all）</button>
+    <button type="button" class="btn btn-outline-secondary" id="btn-clear">清空结果</button>
+  </div>
+
+  <p id="status" class="alert alert-info">点击上面的按钮开始测试</p>
+
+  <table class="table table-hover align-middle">
+    <thead>
+      <tr><th>方式</th><th>总耗时</th><th>第一份数据</th><th>第二份数据</th></tr>
+    </thead>
+    <tbody id="result-body"></tbody>
+  </table>
+
+  
+
+  <script src="../libs/jquery-3.7.1.min.js"></script>
+  <script src="parallel.js"></script>
+</body>
+</html>

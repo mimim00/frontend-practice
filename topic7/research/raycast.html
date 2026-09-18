@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>研究二 · Raycaster 点击拾取</title>
+<style>
+  body { margin: 0; overflow: hidden; background: #0a0f18; font-family: "Microsoft YaHei", sans-serif; }
+  /* 面板一律 pointer-events: none —— 否则会挡住 canvas，OrbitControls 就拖不动了 */
+  #panel {
+    position: fixed; left: 14px; top: 12px; z-index: 6; width: 300px; color: #cfd8dc;
+    background: rgba(8, 14, 26, .9); border: 1px solid #24425f; border-radius: 10px;
+    padding: 12px 14px; font-size: 13px; line-height: 1.9; pointer-events: none;
+  }
+  #panel h1 { margin: 0 0 6px; font-size: 15px; color: #4fc3f7; }
+  #panel code { color: #ffb74d; font-family: Consolas, monospace; font-size: 12px; }
+  #panel .dim { color: #8296a8; font-size: 12px; }
+
+  #info {
+    position: fixed; right: 14px; top: 12px; z-index: 6; width: 280px;
+    background: rgba(8, 14, 26, .9); border: 1px solid #2e5f8a; border-radius: 10px;
+    padding: 12px 14px; color: #e3f2fd; font: 13px/1.85 Consolas, "Microsoft YaHei", monospace;
+    pointer-events: none;
+  }
+  #info b { color: #ffd54f; font-family: "Microsoft YaHei", sans-serif; }
+
+  #hover-box {
+    position: fixed; left: 14px; bottom: 14px; z-index: 6; color: #cfd8dc;
+    background: rgba(8, 14, 26, .9); border: 1px solid #24425f; border-radius: 10px;
+    padding: 8px 14px; font-size: 13px; pointer-events: none;
+  }
+  #hover { color: #8bc34a; }
+</style>
+</head>
+<body>
+<div id="panel">
+  <h1>研究二：从"点击"到"命中"的原理</h1>
+  ① 监听 <code>click</code>，拿到鼠标的屏幕像素坐标<br>
+  ② 换算成归一化设备坐标 NDC：<br>
+  <code>ndcX = (x - rect.left) / rect.width * 2 - 1</code><br>
+  <code>ndcY = -((y - rect.top) / rect.height) * 2 + 1</code><br>
+  <span class="dim">（屏幕 Y 向下、NDC Y 向上，所以要取负）</span><br>
+  ③ <code>raycaster.setFromCamera(pointer, camera)</code><br>
+  <span class="dim">把 NDC 反投影成一条从相机出发、穿过鼠标位置的三维射线</span><br>
+  ④ <code>raycaster.intersectObjects(list, false)</code><br>
+  <span class="dim">逐个求交，返回按 distance 升序的命中数组</span><br>
+  ⑤ 取 <code>hits[0]</code> —— 最近的那次命中就是用户"看到并点到"的物体<br>
+  <span class="dim">红色线 = 射线（从相机出发，穿过命中点再延长 6 米）；红点 = 命中点</span>
+</div>
+
+<div id="info">点一个物体试试～</div>
+<div id="hover-box">当前悬停：<span id="hover">（空）</span></div>
+
+<script src="../../libs/three.min.js"></script>
+<script src="../../libs/OrbitControls.js"></script>
+<script src="raycast.js"></script>
+</body>
+</html>

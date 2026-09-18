@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>研究三 · antialias 与物体数量的性能对比</title>
+<style>
+  body { margin: 0; overflow: hidden; background: #0a0f18; font-family: "Microsoft YaHei", sans-serif; }
+  #panel {
+    position: fixed; left: 14px; top: 12px; z-index: 6; width: 430px; max-height: calc(100vh - 28px);
+    overflow: auto; color: #cfd8dc; background: rgba(8, 14, 26, .92);
+    border: 1px solid #24425f; border-radius: 10px; padding: 14px 16px; font-size: 13px; line-height: 1.8;
+  }
+  #panel h1 { margin: 0 0 8px; font-size: 15px; color: #4fc3f7; }
+  #panel .bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+  select, button {
+    background: #12263f; color: #cfe4f7; border: 1px solid #2e5f8a; border-radius: 8px;
+    padding: 6px 12px; font-size: 13px; cursor: pointer;
+  }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  #status { color: #8bc34a; font-size: 12px; min-height: 18px; }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px; }
+  th, td { border: 1px solid #24425f; padding: 6px 8px; text-align: center; vertical-align: middle; }
+  th { background: #12263f; color: #9fd8e0; }
+  td { color: #cfd8dc; }
+  td.good { background: rgba(76, 175, 80, .18); }
+  td.mid  { background: rgba(255, 183, 77, .18); }
+  td.bad  { background: rgba(229, 115, 115, .20); }
+  td b { color: #ffd54f; font-size: 14px; }
+  .dim { color: #8296a8; font-size: 11px; }
+
+  #conclusion {
+    margin-top: 12px; padding-top: 10px; border-top: 1px solid #24425f;
+    color: #b0bec5; font-size: 12px; line-height: 1.9;
+  }
+  #conclusion b { color: #4fc3f7; }
+</style>
+</head>
+<body>
+<div id="panel">
+  <h1>研究三：antialias 与物体数量的性能对比</h1>
+  <div class="bar">
+    <button type="button" id="btn-run">一键跑完 6 组（约 25 秒）</button>
+    <select id="sel-count">
+      <option value="100">100 个物体</option>
+      <option value="500" selected>500 个物体</option>
+      <option value="2000">2000 个物体</option>
+      <option value="5000">5000 个物体</option>
+    </select>
+    <select id="sel-aa">
+      <option value="on" selected>antialias 开</option>
+      <option value="off">antialias 关</option>
+    </select>
+    <button type="button" id="btn-one">单组测量</button>
+  </div>
+  <div id="status">点"一键跑完 6 组"，把结果表截图存进报告。</div>
+
+  <table>
+    <thead>
+      <tr><th>物体数量</th><th>antialias = 开</th><th>antialias = 关</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>100</th><td id="cell-100-on">—</td><td id="cell-100-off">—</td></tr>
+      <tr><th>500</th><td id="cell-500-on">—</td><td id="cell-500-off">—</td></tr>
+      <tr><th>2000</th><td id="cell-2000-on">—</td><td id="cell-2000-off">—</td></tr>
+      <tr><th>5000</th><td id="cell-5000-on">—</td><td id="cell-5000-off">—</td></tr>
+    </tbody>
+  </table>
+  <div class="dim">
+    测量方法：每组先热身 0.6 秒（跳过着色器编译与首帧上传），再用 requestAnimationFrame 数 2.5 秒的帧数换算成 FPS；
+    setPixelRatio(1) 固定，所有物体共享同一份 geometry 与 material，保证变量只有"antialias"和"物体数量"。
+  </div>
+
+  <div id="conclusion">跑完 6 组后这里会自动给出结论。</div>
+</div>
+
+<script src="../../libs/three.min.js"></script>
+<script src="../../libs/OrbitControls.js"></script>
+<script src="perf.js"></script>
+</body>
+</html>

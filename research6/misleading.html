@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>研究三：误导图表修复案例</title>
+  <link href="../libs/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .chart-box { height: 340px; }
+    #status { display: none; }
+  </style>
+</head>
+<body class="container py-4">
+  <header class="mb-3">
+    <h1 class="h3">研究三：误导图表修复案例 —— 截断坐标轴</h1>
+    <p class="text-muted" id="sub-title">数据来源：课程统一数据集</p>
+  </header>
+
+  <p id="status" class="alert alert-warning"></p>
+
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <div class="card border-danger">
+        <div class="card-body">
+          <h2 class="h6 text-danger">y 轴从 <span id="min-label">240</span> 开始（截断坐标轴）</h2>
+          <div id="chart-misleading" class="chart-box"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card border-success">
+        <div class="card-body">
+          <h2 class="h6 text-success">y 轴从 0 开始，标注单位/范围/来源</h2>
+          <div id="chart-honest" class="chart-box"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <div class="alert alert-secondary mt-4" id="analysis"></div>
+
+  <script src="../libs/jquery-3.7.1.min.js"></script>
+  <script src="../libs/echarts.min.js"></script>
+  <script src="misleading.js"></script>
+</body>
+</html>
