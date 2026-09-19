@@ -1,12 +1,7 @@
-/* ============================================================
- * style.css —— 班主任班级管理工作台 自定义样式
- * 引入顺序：bootstrap.min.css → style.css（放后面才能覆盖 Bootstrap）
- * 个人风格：用"黑板绿 + 粉笔黄"配色，和案例复现的深蓝区分开。
- * ============================================================ */
 
 :root {
-  --class-green: #1f6b4f;      /* 主色：导航、标题（黑板绿） */
-  --class-green-dark: #164a37;
+  --class-green: #4b9fb8;      /* 主色：导航、标题（黑板绿） */
+  --class-green-dark: #527f6f;
   --class-amber: #c9901f;      /* 强调色：当前态下划线、链接悬停（粉笔黄） */
   --class-ink: #26302b;        /* 正文 */
   --class-muted: #5b6b62;      /* 次要文字 */
@@ -33,7 +28,6 @@ body {
 }
 .skip-link:focus { left: 0; }
 
-/* ---------- 导航 ---------- */
 .bg-class { background-color: var(--class-green); }
 .navbar-brand { font-weight: 700; letter-spacing: .5px; }
 .brand-mark {
@@ -107,9 +101,7 @@ select:focus-visible,
 }
 #student-table tbody tr.is-picked { background-color: #e8f2ec; box-shadow: inset 3px 0 0 0 var(--class-green); }
 
-/* 成绩用数字 + 文字两重提示，不单靠颜色表达"及格/不及格"；
-   提示文字放在真实 DOM 里（score-hint），而不是 CSS ::after——CSS 生成内容
-   不是所有读屏软件都会读，放进 DOM 才可靠（可访问性研究任务一的修复项） */
+/* 成绩用数字 + 文字两重提示，不单靠颜色表达"及格/不及格" */
 .score-tag { font-variant-numeric: tabular-nums; font-weight: 600; }
 .score-tag.is-low { color: #a3521c; }
 .score-hint { font-weight: 400; color: var(--class-muted); margin-left: .25rem; }

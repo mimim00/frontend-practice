@@ -401,7 +401,7 @@ const renderScoreChart = (students) => {
   if (students.length === 0) charts.score.clear();
   charts.score.setOption({
     title: {
-      text: '月考分数段分布（单位：人）',
+      text: '数学月考分数段分布（单位：人）',
       subtext: students.length ? '共 ' + students.length + ' 人' : '当前无数据',
       left: 'center', textStyle: { fontSize: 14 }, subtextStyle: { fontSize: 12 }
     },
