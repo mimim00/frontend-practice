@@ -1,22 +1,4 @@
-/* ============================================================
- * app.js —— 班主任班级管理工作台（第八次课自主实践）
- *
- * 数据流（先想清楚再写代码）：
- *   data/students.json ──fetch──┐
- *                               ├─→ state.students ──applyFilter()──→ 概览卡片
- *   localStorage（增删改持久化）──┘        │                           学生表格
- *   data/students.js（内嵌兜底）            └───────────────────────→ 三张图表 + 异常名单
- *
- * 五个模块共用同一份 state.students：增删改只改数组 → save() → renderAll()，
- * 不存在"表格一份数据、图表另一份数据"对不上的情况。
- *
- * 技术分工（讲义"各技术的职责边界"）：
- *   jQuery    → DOM 查询与事件委托
- *   原生 JS   → 过滤、聚合、校验、localStorage 等核心逻辑
- *   ECharts   → 分数段分布 + 各小组平均分
- *   Chart.js  → 出勤构成圆环图
- *   Three.js  → 教室座位三维（独立子页面 three-d/classroom.html）
- * ============================================================ */
+
 
 'use strict';
 
@@ -117,7 +99,7 @@ const loadData = async () => {
     if (!Array.isArray(data.students)) {
       throw new Error('students 不是数组（数据格式错）');
     }
-    start(data.students, false);   // 空数组也走这里，start() 内部会显示空数据提示
+    start(data.students, false);   // 空组也走这里，start() 内部会显示空数据提示
   } catch (error) {
     const fallback = window.CLASS_STUDENTS && window.CLASS_STUDENTS.students;
     if (!fallback) {
@@ -156,7 +138,7 @@ const start = (students, usedFallback) => {
 };
 
 /* ============================================================
- * 2. 筛选：唯一数据入口，改完 filter 统一走 renderAll()
+ * 2. 筛选：唯一数据入口
  * ============================================================ */
 const applyFilter = (students) => {
   const { group, att, keyword } = state.filter;
@@ -341,7 +323,7 @@ const cancelEdit = (tr) => {
   renderAll();
 };
 
-/* 事件委托：点击表格里任意"编辑/删除"按钮，冒泡到 tbody 统一处理 */
+/* 事件委托：任意"编辑/删除"按钮，冒泡到 tbody 统一处理 */
 $('#student-body').on('click', '[data-action]', function () {
   const tr = $(this).closest('tr')[0];
   const action = $(this).data('action');
