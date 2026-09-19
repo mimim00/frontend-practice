@@ -1,0 +1,197 @@
+/* ============================================================
+ * style.css —— 迷你版校园信息中心 自定义样式
+ * 引入顺序：bootstrap.min.css → style.css（放后面才能覆盖 Bootstrap）
+ * 命名前缀统一用 .campus- / 语义块名，避免和 Bootstrap 的类撞名。
+ * ============================================================ */
+
+:root {
+  --campus-navy: #1f4f7d;      /* 主色：导航、标题 */
+  --campus-navy-dark: #17395b;
+  --campus-accent: #b8860b;    /* 强调色：当前态下划线、链接悬停 */
+  --campus-ink: #23303d;       /* 正文 */
+  --campus-muted: #5b6b7b;     /* 次要文字，对白底对比度约 5.2:1 */
+  --campus-line: #dde4eb;
+  --campus-bg: #f6f8fa;
+}
+
+body {
+  font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  color: var(--campus-ink);
+  background-color: var(--campus-bg);
+}
+
+/* 跳到主内容：默认移出视口，键盘聚焦时才出现 */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 1080;
+  background: #fff;
+  color: var(--campus-navy);
+  padding: .5rem 1rem;
+  border: 2px solid var(--campus-navy);
+  border-radius: 0 0 .5rem 0;
+}
+.skip-link:focus {
+  left: 0;
+}
+
+/* ---------- 导航 ---------- */
+.bg-campus {
+  background-color: var(--campus-navy);
+}
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: .5px;
+}
+.brand-mark {
+  display: inline-block;
+  width: 1.55rem;
+  height: 1.55rem;
+  line-height: 1.55rem;
+  text-align: center;
+  margin-right: .4rem;
+  border-radius: .35rem;
+  background: var(--campus-accent);
+  color: #fff;
+  font-size: .95rem;
+  vertical-align: -2px;
+}
+.navbar .nav-link {
+  padding: .5rem .85rem;
+  border-radius: .35rem;
+  color: rgba(255, 255, 255, .82);
+}
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+  color: #fff;
+  background-color: rgba(255, 255, 255, .12);
+}
+/* 当前项高亮：颜色 + 下划线两种线索，不只靠颜色（可访问性要求） */
+.navbar .nav-link.is-active {
+  color: #fff;
+  font-weight: 600;
+  box-shadow: inset 0 -3px 0 0 var(--campus-accent);
+}
+/* 键盘 Tab 走到哪里都要看得见 */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--campus-accent);
+  outline-offset: 2px;
+}
+
+/* ---------- 区块 ---------- */
+/* 窄屏防溢出：状态提示里会出现 "2026-11-21" "HTTP 404" 这种没有空格的长串，
+   默认不换行会把容器撑破，手机上就出横向滚动条了。 */
+#status,
+.module,
+#data-source,
+#room-summary,
+#scene-status,
+.site-footer {
+  overflow-wrap: anywhere;
+}
+
+.module {
+  padding-top: 1.5rem;
+  scroll-margin-top: 5.5rem;   /* 吸顶导航会盖住标题，用 scroll-margin 让位 */
+}
+.module + .module {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--campus-line);
+}
+.module:first-child {
+  scroll-margin-top: 5.5rem;
+}
+
+.card {
+  border-color: var(--campus-line);
+}
+.module-card {
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.module-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 .5rem 1rem rgba(31, 79, 125, .12) !important;
+}
+#cards .card-title {
+  color: var(--campus-muted);
+  font-weight: 600;
+}
+#cards .stat-value {
+  color: var(--campus-navy);
+  font-weight: 700;
+}
+
+/* ---------- 筛选栏 ---------- */
+.filter-bar {
+  background-color: #fff;
+  border: 1px solid var(--campus-line);
+}
+.filter-label {
+  display: block;
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--campus-muted);
+  margin-bottom: .35rem;
+}
+/* 选中态同时改底色 + 加粗，色盲用户也能分辨 */
+#floor-filters .btn.is-on,
+#status-filters .btn.is-on {
+  background-color: var(--campus-navy);
+  border-color: var(--campus-navy);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ---------- 表格 ---------- */
+#room-table {
+  background-color: #fff;
+}
+/* 手机宽度下九列硬挤会把每格压成一列竖排汉字，读都读不了。
+   让单元格不换行、表格保持一个最小宽度，横向滚动交给 .table-responsive——
+   页面本身仍然没有横向滚动条，只是表格自己能左右推。 */
+#room-table th,
+#room-table td {
+  white-space: nowrap;
+}
+@media (max-width: 767.98px) {
+  #room-table { min-width: 46rem; }
+}
+#room-table td.is-full {
+  color: #a3521c;              /* 满座提示用文字色 + 后面的文字标签，不只用颜色 */
+  font-weight: 600;
+}
+#room-table tbody tr {
+  cursor: pointer;
+}
+#room-table tbody tr.is-picked {
+  background-color: #e8f0f8;
+  box-shadow: inset 3px 0 0 0 var(--campus-navy);
+}
+
+/* ---------- 图表容器：必须有高度，否则 ECharts/Chart.js 画布为 0 ---------- */
+.chart-box {
+  height: 380px;
+  width: 100%;
+}
+@media (max-width: 575.98px) {
+  .chart-box { height: 300px; }
+}
+
+/* ---------- 页脚 ---------- */
+.site-footer {
+  background-color: #fff;
+  border-top: 1px solid var(--campus-line);
+}
+.site-footer code {
+  color: var(--campus-navy);
+}
+
+/* ---------- 打印：截图和打印时去掉吸顶与阴影 ---------- */
+@media print {
+  .navbar { position: static !important; }
+  .skip-link { display: none; }
+}

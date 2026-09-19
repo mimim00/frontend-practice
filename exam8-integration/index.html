@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>迷你版校园信息中心</title>
+<meta name="description" content="第八次课整合练习：首页 / 自习室查询 / 使用统计 / 校园三维导览">
+<link href="../libs/bootstrap.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- 跳到主内容：只用 Tab 键时第一个焦点，键盘用户不用每次穿过整个导航 -->
+<a class="skip-link" href="#home">跳到主内容</a>
+
+<!-- ===================== 导航：四个模块的统一入口 ===================== -->
+<nav class="navbar navbar-expand-md navbar-dark bg-campus sticky-top" aria-label="站点主导航">
+  <div class="container">
+    <a class="navbar-brand" href="#home">
+      <span class="brand-mark" aria-hidden="true">云</span>迷你校园信息中心
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+            aria-controls="mainNav" aria-expanded="false" aria-label="展开或收起导航菜单">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link is-active" href="#home">首页</a></li>
+        <li class="nav-item"><a class="nav-link" href="#rooms">自习室</a></li>
+        <li class="nav-item"><a class="nav-link" href="#stats">统计</a></li>
+        <li class="nav-item"><a class="nav-link" href="three-d/scene.html">校园三维</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- 数据加载状态：加载中 / 空数据 / 失败，三种情况都在这里出声，不让页面白屏 -->
+<div class="container mt-3">
+  <p id="status" class="alert alert-warning mb-0" role="status" aria-live="polite">正在加载数据……</p>
+</div>
+
+<main class="container py-4" id="main">
+
+  <!-- ===================== 模块一：首页 ===================== -->
+  <section id="home" class="module" aria-labelledby="home-title">
+    <header class="mb-4">
+      <h1 class="h3 mb-1" id="home-title">校园公共信息与数据展示中心</h1>
+      <p class="text-muted mb-0" id="data-source">数据来源：课程统一数据集</p>
+    </header>
+
+    <div class="row g-3 mb-4" id="cards">
+      <!-- 概览卡片由 app.js 渲染，数据未到前这里是空的 -->
+    </div>
+
+    <h2 class="h5 mb-3">四大模块入口</h2>
+    <div class="row g-3">
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="card h-100 module-card">
+          <div class="card-body">
+            <h3 class="h6 card-title">自习室查询</h3>
+            <p class="card-text small text-muted">按楼层与开放状态筛选十二间自习室，实时看空位。</p>
+            <a class="stretched-link small" href="#rooms">进入自习室 →</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="card h-100 module-card">
+          <div class="card-body">
+            <h3 class="h6 card-title">使用统计图表</h3>
+            <p class="card-text small text-muted">ECharts 柱状图看使用率，Chart.js 圆环图看开放状态构成。</p>
+            <a class="stretched-link small" href="#stats">进入统计 →</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="card h-100 module-card">
+          <div class="card-body">
+            <h3 class="h6 card-title">校园三维导览</h3>
+            <p class="card-text small text-muted">Three.js 按数据生成校园地标，可拖拽旋转、滚轮缩放。</p>
+            <a class="stretched-link small" href="three-d/scene.html">进入三维导览 →</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="card h-100 module-card">
+          <div class="card-body">
+            <h3 class="h6 card-title">质量自查记录</h3>
+            <p class="card-text small text-muted">三档宽度、三种错误、可访问性、控制台五项自查的证据入口。</p>
+            <a class="stretched-link small" href="README.md">查看 README →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 模块二：自习室查询（筛选交互） ===================== -->
+  <section id="rooms" class="module" aria-labelledby="rooms-title">
+    <h2 class="h4 mb-3" id="rooms-title">自习室查询</h2>
+
+    <form class="row g-3 align-items-end filter-bar p-3 mb-3 rounded" id="filters">
+      <div class="col-12 col-lg-5">
+        <span class="filter-label" id="floor-label">楼层</span>
+        <div class="btn-group flex-wrap" role="group" aria-labelledby="floor-label" id="floor-filters">
+          <button type="button" class="btn btn-outline-primary is-on" data-floor="all" aria-pressed="true">全部</button>
+          <button type="button" class="btn btn-outline-primary" data-floor="1" aria-pressed="false">1 层</button>
+          <button type="button" class="btn btn-outline-primary" data-floor="2" aria-pressed="false">2 层</button>
+          <button type="button" class="btn btn-outline-primary" data-floor="3" aria-pressed="false">3 层</button>
+          <button type="button" class="btn btn-outline-primary" data-floor="4" aria-pressed="false">4 层</button>
+        </div>
+      </div>
+      <div class="col-12 col-lg-4">
+        <span class="filter-label" id="status-label">开放状态</span>
+        <div class="btn-group flex-wrap" role="group" aria-labelledby="status-label" id="status-filters">
+          <button type="button" class="btn btn-outline-primary is-on" data-status="all" aria-pressed="true">全部</button>
+          <button type="button" class="btn btn-outline-primary" data-status="开放" aria-pressed="false">开放</button>
+          <button type="button" class="btn btn-outline-primary" data-status="维修" aria-pressed="false">维修</button>
+          <button type="button" class="btn btn-outline-primary" data-status="闭馆" aria-pressed="false">闭馆</button>
+        </div>
+      </div>
+      <div class="col-12 col-lg-3">
+        <label class="form-label filter-label" for="keyword">按名称搜索</label>
+        <input type="search" class="form-control" id="keyword" placeholder="例如：图书馆" autocomplete="off">
+      </div>
+    </form>
+
+    <!-- 筛选结果播报：aria-live 让读屏用户也能听到"筛完还剩几条" -->
+    <p class="text-muted small" id="room-summary" aria-live="polite">尚未加载数据。</p>
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle" id="room-table">
+        <caption class="visually-hidden">按楼层与开放状态筛选后的自习室列表</caption>
+        <thead class="table-light">
+          <tr>
+            <th scope="col">名称</th>
+            <th scope="col">楼栋</th>
+            <th scope="col">楼层</th>
+            <th scope="col">座位</th>
+            <th scope="col">已占用</th>
+            <th scope="col">空位</th>
+            <th scope="col">使用率</th>
+            <th scope="col">状态</th>
+            <th scope="col">开放时间</th>
+          </tr>
+        </thead>
+        <tbody id="room-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===================== 模块三：使用统计图表 ===================== -->
+  <section id="stats" class="module" aria-labelledby="stats-title">
+    <h2 class="h4 mb-3" id="stats-title">使用统计</h2>
+
+    <div class="row g-3">
+      <div class="col-12 col-lg-7">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3 class="h6 card-title">各自习室使用率</h3>
+            <!-- 容器必须有确定高度：高度为 0 时 ECharts 画布也是 0，图"不显示"多半是这个原因 -->
+            <div id="usage-chart" class="chart-box" role="img"
+                 aria-label="横向柱状图：当前筛选条件下各自习室的座位使用率百分比"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-5">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3 class="h6 card-title">开放状态构成</h3>
+            <div class="chart-box"><canvas id="status-chart" role="img"
+                 aria-label="圆环图：当前筛选条件下开放、维修、闭馆三种状态的自习室间数"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer py-4 mt-4">
+  <div class="container small">
+    <p class="mb-1">
+      迷你版校园信息中心 · 《软件开发综合实践》第八次课课堂案例复现 ·
+      整合课堂一至课堂七成果
+    </p>
+    <p class="mb-0 text-muted">
+      库：Bootstrap 5.3.3 / jQuery 3.7.1 / ECharts 5.6.0 / Chart.js 4.4.4 / Three.js r128（均为课程离线包，见
+      <code>../libs/</code>）　数据：课程统一数据集（教学演示数据，非真实统计）
+    </p>
+  </div>
+</footer>
+
+<!-- ===================== 加载顺序：库在前，自己的代码在后 =====================
+     顺序反了就会报 $ is not defined / echarts is not defined，八成不是代码写错。 -->
+<script src="../libs/jquery-3.7.1.min.js"></script>
+<script src="../libs/bootstrap.bundle.min.js"></script>
+<script src="../libs/echarts.min.js"></script>
+<script src="../libs/chart.umd.js"></script>
+<script src="data/studyrooms.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
