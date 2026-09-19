@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>班主任班级管理工作台 · 高三2班</title>
+<meta name="description" content="第八次课自主实践：整合 HTML/CSS/JS/数据可视化/三维的班级管理工作台">
+<link href="../libs/bootstrap.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- 跳到主内容：只用 Tab 键时第一个可聚焦元素，键盘用户不用穿过整个导航 -->
+<a class="skip-link" href="#overview">跳到主内容</a>
+
+<!-- ===================== 统一导航：五个模块一个入口 ===================== -->
+<nav class="navbar navbar-expand-md navbar-dark bg-class sticky-top" aria-label="站点主导航">
+  <div class="container">
+    <a class="navbar-brand" href="#overview">
+      <span class="brand-mark" aria-hidden="true">班</span>班主任工作台
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+            aria-controls="mainNav" aria-expanded="false" aria-label="展开或收起导航菜单">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link is-active" href="#overview">工作台</a></li>
+        <li class="nav-item"><a class="nav-link" href="#roster">学生档案</a></li>
+        <li class="nav-item"><a class="nav-link" href="#scores">成绩统计</a></li>
+        <li class="nav-item"><a class="nav-link" href="#attendance">出勤记录</a></li>
+        <li class="nav-item"><a class="nav-link" href="three-d/classroom.html">教室三维</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- 数据加载状态：加载中 / 空数据 / 失败三种都在这里出声，不让页面白屏 -->
+<div class="container mt-3">
+  <p id="status" class="alert alert-warning mb-0" role="status" aria-live="polite">正在加载学生数据……</p>
+</div>
+
+<main class="container py-4" id="main">
+
+  <!-- ===================== 模块一：工作台概览 ===================== -->
+  <section id="overview" class="module" aria-labelledby="overview-title">
+    <header class="mb-3">
+      <h1 class="h3 mb-1" id="overview-title">班级管理工作台</h1>
+      <p class="text-muted mb-0" id="data-source">数据来源：课程统一数据集</p>
+    </header>
+
+    <div class="row g-3 mb-4" id="cards">
+      <!-- 概览卡片由 app.js 计算渲染，数据未到前为空 -->
+    </div>
+
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <h2 class="h6 card-title">这个工作台把前七次课串起来了</h2>
+        <p class="card-text small text-muted mb-0">
+          数据层复用课堂六的 <code>fetch + JSON + 状态处理</code>，交互层复用课堂五的
+          <code>事件委托 + 增删改查 + localStorage</code>，可视化复用课堂六的 ECharts/Chart.js，
+          三维层复用课堂七的 Three.js；五个模块共用同一份学生数组，改一处、处处同步。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 模块二：学生档案（增删改查） ===================== -->
+  <section id="roster" class="module" aria-labelledby="roster-title">
+    <h2 class="h4 mb-3" id="roster-title">学生档案</h2>
+
+    <!-- 添加学生：语义化表单，label 与控件一一对应 -->
+    <form id="add-form" class="row g-2 align-items-end p-3 mb-3 rounded filter-bar" novalidate>
+      <div class="col-6 col-md-3">
+        <label class="form-label filter-label" for="f-name">姓名</label>
+        <input type="text" class="form-control" id="f-name" maxlength="10" autocomplete="off" required>
+      </div>
+      <div class="col-6 col-md-2">
+        <label class="form-label filter-label" for="f-gender">性别</label>
+        <select class="form-select" id="f-gender">
+          <option value="男">男</option>
+          <option value="女">女</option>
+        </select>
+      </div>
+      <div class="col-4 col-md-2">
+        <label class="form-label filter-label" for="f-group">小组</label>
+        <select class="form-select" id="f-group">
+          <option value="1">1 组</option><option value="2">2 组</option><option value="3">3 组</option>
+          <option value="4">4 组</option><option value="5">5 组</option><option value="6">6 组</option>
+        </select>
+      </div>
+      <div class="col-4 col-md-2">
+        <label class="form-label filter-label" for="f-score">月考成绩</label>
+        <input type="number" class="form-control" id="f-score" min="0" max="100" step="1" value="60">
+      </div>
+      <div class="col-4 col-md-2">
+        <label class="form-label filter-label" for="f-role">班委职务</label>
+        <input type="text" class="form-control" id="f-role" maxlength="8" placeholder="可留空" autocomplete="off">
+      </div>
+      <div class="col-12 col-md-1">
+        <button type="submit" class="btn btn-primary w-100">添加</button>
+      </div>
+      <p class="text-danger small mb-0" id="form-tip" aria-live="polite"></p>
+    </form>
+
+    <!-- 筛选栏 -->
+    <form class="row g-2 align-items-end p-3 mb-3 rounded filter-bar" id="filters">
+      <div class="col-6 col-md-3">
+        <span class="filter-label" id="group-label">按小组</span>
+        <div class="btn-group flex-wrap" role="group" aria-labelledby="group-label" id="group-filters">
+          <button type="button" class="btn btn-outline-primary is-on" data-group="all" aria-pressed="true">全部</button>
+          <button type="button" class="btn btn-outline-primary" data-group="1" aria-pressed="false">1</button>
+          <button type="button" class="btn btn-outline-primary" data-group="2" aria-pressed="false">2</button>
+          <button type="button" class="btn btn-outline-primary" data-group="3" aria-pressed="false">3</button>
+          <button type="button" class="btn btn-outline-primary" data-group="4" aria-pressed="false">4</button>
+          <button type="button" class="btn btn-outline-primary" data-group="5" aria-pressed="false">5</button>
+          <button type="button" class="btn btn-outline-primary" data-group="6" aria-pressed="false">6</button>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <span class="filter-label" id="att-label">按出勤</span>
+        <div class="btn-group flex-wrap" role="group" aria-labelledby="att-label" id="att-filters">
+          <button type="button" class="btn btn-outline-primary is-on" data-att="all" aria-pressed="true">全部</button>
+          <button type="button" class="btn btn-outline-primary" data-att="出勤" aria-pressed="false">出勤</button>
+          <button type="button" class="btn btn-outline-primary" data-att="请假" aria-pressed="false">请假</button>
+          <button type="button" class="btn btn-outline-primary" data-att="缺勤" aria-pressed="false">缺勤</button>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <label class="form-label filter-label" for="keyword">按姓名/学号搜索</label>
+        <input type="search" class="form-control" id="keyword" placeholder="例如：张 / 20260001" autocomplete="off">
+      </div>
+      <div class="col-6 col-md-3 d-flex gap-2">
+        <button type="button" class="btn btn-outline-secondary flex-fill" id="reset-data">重置演示数据</button>
+      </div>
+    </form>
+
+    <p class="text-muted small" id="roster-summary" aria-live="polite">尚未加载数据。</p>
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle" id="student-table">
+        <caption class="visually-hidden">学生档案列表，可点击行内控件编辑成绩与出勤、删除记录</caption>
+        <thead class="table-light">
+          <tr>
+            <th scope="col">学号</th>
+            <th scope="col">姓名</th>
+            <th scope="col">性别</th>
+            <th scope="col">小组</th>
+            <th scope="col">职务</th>
+            <th scope="col">月考成绩</th>
+            <th scope="col">出勤</th>
+            <th scope="col">操作</th>
+          </tr>
+        </thead>
+        <tbody id="student-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===================== 模块三：成绩统计 ===================== -->
+  <section id="scores" class="module" aria-labelledby="scores-title">
+    <h2 class="h4 mb-3" id="scores-title">成绩统计</h2>
+    <div class="row g-3">
+      <div class="col-12 col-lg-7">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3 class="h6 card-title">分数段分布</h3>
+            <div id="score-chart" class="chart-box" role="img"
+                 aria-label="柱状图：各分数段的学生人数"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-5">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3 class="h6 card-title">各小组平均分</h3>
+            <div id="group-chart" class="chart-box" role="img"
+                 aria-label="柱状图：六个小组的月考平均分"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 模块四：出勤记录 ===================== -->
+  <section id="attendance" class="module" aria-labelledby="attendance-title">
+    <h2 class="h4 mb-3" id="attendance-title">出勤记录</h2>
+    <div class="row g-3">
+      <div class="col-12 col-lg-5">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3 class="h6 card-title">出勤构成</h3>
+            <div class="chart-box"><canvas id="att-chart" role="img"
+                 aria-label="圆环图：出勤、请假、缺勤三类人数"></canvas></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-7">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3 class="h6 card-title">异常出勤名单</h3>
+            <ul class="list-group list-group-flush" id="att-list"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer py-4 mt-4">
+  <div class="container small">
+    <p class="mb-1">
+      班主任班级管理工作台（高三2班）· 《软件开发综合实践》第八次课自主实践 ·
+      整合课堂一至课堂七成果，延续 topic2/topic3 的班主任主题
+    </p>
+    <p class="mb-0 text-muted">
+      库：Bootstrap 5.3.3 / jQuery 3.7.1 / ECharts 5.6.0 / Chart.js 4.4.4 / Three.js r128（课程离线包，见
+      <code>../libs/</code>）　数据：课程统一数据集（姓名成绩均为虚构演示数据）
+    </p>
+  </div>
+</footer>
+
+<!-- ===================== 加载顺序：库在前，自己的代码在后 =====================
+     defer 让脚本并行下载、等 HTML 解析完再按顺序执行，不阻塞首屏渲染；
+     见 practice/research/README.md 研究任务二的前后测量对比。 -->
+<script src="../libs/jquery-3.7.1.min.js" defer></script>
+<script src="../libs/bootstrap.bundle.min.js" defer></script>
+<script src="../libs/echarts.min.js" defer></script>
+<script src="../libs/chart.umd.js" defer></script>
+<script src="data/students.js" defer></script>
+<script src="js/app.js" defer></script>
+</body>
+</html>

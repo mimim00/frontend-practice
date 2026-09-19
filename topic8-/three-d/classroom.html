@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>教室三维座位图 · 班主任工作台</title>
+<link href="../../libs/bootstrap.min.css" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<style>
+  html, body { height: 100%; }
+  #scene-host {
+    position: relative;
+    width: 100%;
+    height: 66vh;
+    min-height: 360px;
+    background: #10161a;
+    overflow: hidden;
+  }
+  #scene-host canvas { display: block; }
+  #scene-tip {
+    position: absolute; left: 12px; bottom: 10px; z-index: 3;
+    color: #d5dde3; font-size: 12px; line-height: 1.7;
+    background: rgba(0, 0, 0, .42); border-radius: 6px; padding: 6px 10px;
+    pointer-events: none; max-width: 82%;
+  }
+  #scene-status { position: absolute; left: 12px; top: 12px; right: 12px; z-index: 3; }
+  #scene-status .alert { margin-bottom: 0; }
+  .legend-item { display: inline-flex; align-items: center; gap: .4rem; margin-right: 1rem; }
+  .legend-swatch { width: .9rem; height: .9rem; border-radius: .2rem; display: inline-block; }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-class sticky-top" aria-label="站点主导航">
+  <div class="container">
+    <a class="navbar-brand" href="../index.html#overview">
+      <span class="brand-mark" aria-hidden="true">班</span>班主任工作台
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+            aria-controls="mainNav" aria-expanded="false" aria-label="展开或收起导航菜单">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="../index.html#overview">工作台</a></li>
+        <li class="nav-item"><a class="nav-link" href="../index.html#roster">学生档案</a></li>
+        <li class="nav-item"><a class="nav-link" href="../index.html#scores">成绩统计</a></li>
+        <li class="nav-item"><a class="nav-link" href="../index.html#attendance">出勤记录</a></li>
+        <li class="nav-item"><a class="nav-link is-active" href="classroom.html" aria-current="page">教室三维</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container py-4">
+  <header class="mb-3">
+    <h1 class="h3 mb-1">教室三维座位图</h1>
+    <p class="text-muted mb-0" id="scene-source">场景由 data/students.json 生成</p>
+  </header>
+
+  <div class="row g-4">
+    <div class="col-12 col-lg-8">
+      <div id="scene-host">
+        <div id="scene-status" role="status" aria-live="polite">
+          <p class="alert alert-warning">正在加载学生数据……</p>
+        </div>
+        <p id="scene-tip">左键拖拽旋转 · 滚轮缩放 · 右键平移　|　<b>点击桌面</b>查看该座位学生信息</p>
+      </div>
+      <p class="mt-2 mb-0">
+        <span class="legend-item"><span class="legend-swatch" style="background:#1f6b4f"></span>出勤</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#c9901f"></span>请假</span>
+        <span class="legend-item"><span class="legend-swatch" style="background:#a3521c"></span>缺勤</span>
+        <span class="text-muted small ms-2">桌面颜色按出勤状态着色，名字标签与点击详情给出完整信息（不单靠颜色）。</span>
+      </p>
+    </div>
+
+    <div class="col-12 col-lg-4">
+      <h2 class="h5">异常出勤名单</h2>
+      <p class="small text-muted">点下面的条目，相机直接飞到对应座位；Tab + 回车同样可用。</p>
+      <ul class="list-group building-list" id="att-list"></ul>
+      <div class="alert alert-light border mt-3 mb-0 small" id="seat-detail">
+        点击一个座位查看学生信息。
+      </div>
+    </div>
+  </div>
+
+  <section class="mt-4">
+    <h2 class="h5">这一页和首页怎么衔接</h2>
+    <p class="mb-0">
+      座位的 <code>group</code> / <code>seat</code> / <code>name</code> 直接来自首页同一份
+      <code>data/students.json</code>：在首页把某学生从"出勤"改成"请假"，这里对应桌面会跟着变黄。
+      三维单独成页，是为了不把 600 KB 的 Three.js 拖进首屏（讲义"三维不要塞进主页面拖慢加载"）。
+    </p>
+  </section>
+</main>
+
+<footer class="site-footer py-4 mt-4">
+  <div class="container small text-muted">
+    Three.js r128 + OrbitControls（课程离线包，见 <code>../../libs/</code>）　
+    场景数据：data/students.json（姓名成绩均为虚构演示数据）
+  </div>
+</footer>
+
+<script src="../../libs/three.min.js" defer></script>
+<script src="../../libs/OrbitControls.js" defer></script>
+<script src="../data/students.js" defer></script>
+<script src="classroom.js" defer></script>
+</body>
+</html>

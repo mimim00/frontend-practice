@@ -1,0 +1,144 @@
+/* ============================================================
+ * style.css —— 班主任班级管理工作台 自定义样式
+ * 引入顺序：bootstrap.min.css → style.css（放后面才能覆盖 Bootstrap）
+ * 个人风格：用"黑板绿 + 粉笔黄"配色，和案例复现的深蓝区分开。
+ * ============================================================ */
+
+:root {
+  --class-green: #1f6b4f;      /* 主色：导航、标题（黑板绿） */
+  --class-green-dark: #164a37;
+  --class-amber: #c9901f;      /* 强调色：当前态下划线、链接悬停（粉笔黄） */
+  --class-ink: #26302b;        /* 正文 */
+  --class-muted: #5b6b62;      /* 次要文字 */
+  --class-line: #dde5e0;
+  --class-bg: #f5f8f6;
+}
+
+body {
+  font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  color: var(--class-ink);
+  background-color: var(--class-bg);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 1080;
+  background: #fff;
+  color: var(--class-green);
+  padding: .5rem 1rem;
+  border: 2px solid var(--class-green);
+  border-radius: 0 0 .5rem 0;
+}
+.skip-link:focus { left: 0; }
+
+/* ---------- 导航 ---------- */
+.bg-class { background-color: var(--class-green); }
+.navbar-brand { font-weight: 700; letter-spacing: .5px; }
+.brand-mark {
+  display: inline-block;
+  width: 1.55rem;
+  height: 1.55rem;
+  line-height: 1.55rem;
+  text-align: center;
+  margin-right: .4rem;
+  border-radius: .35rem;
+  background: var(--class-amber);
+  color: #fff;
+  font-size: .95rem;
+  vertical-align: -2px;
+}
+.navbar .nav-link { padding: .5rem .85rem; border-radius: .35rem; color: rgba(255, 255, 255, .84); }
+.navbar .nav-link:hover,
+.navbar .nav-link:focus { color: #fff; background-color: rgba(255, 255, 255, .12); }
+/* 当前项高亮：颜色 + 下划线两种线索，不只靠颜色 */
+.navbar .nav-link.is-active {
+  color: #fff;
+  font-weight: 600;
+  box-shadow: inset 0 -3px 0 0 var(--class-amber);
+}
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--class-amber);
+  outline-offset: 2px;
+}
+
+/* ---------- 区块 ---------- */
+.module {
+  padding-top: 1.5rem;
+  scroll-margin-top: 5.5rem;
+}
+.module + .module { margin-top: 1.5rem; border-top: 1px solid var(--class-line); }
+.module:first-child { scroll-margin-top: 5.5rem; }
+
+.card { border-color: var(--class-line); }
+#cards .card-title { color: var(--class-muted); font-weight: 600; }
+#cards .stat-value { color: var(--class-green); font-weight: 700; }
+
+/* ---------- 表单与筛选栏 ---------- */
+.filter-bar { background-color: #fff; border: 1px solid var(--class-line); }
+.filter-label {
+  display: block;
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--class-muted);
+  margin-bottom: .35rem;
+}
+#group-filters .btn.is-on,
+#att-filters .btn.is-on {
+  background-color: var(--class-green);
+  border-color: var(--class-green);
+  color: #fff;
+  font-weight: 600;
+}
+#add-form input.is-invalid,
+#add-form select.is-invalid { border-color: #dc3545; }
+
+/* ---------- 表格 ---------- */
+#student-table { background-color: #fff; }
+#student-table th,
+#student-table td { white-space: nowrap; }
+@media (max-width: 767.98px) {
+  #student-table { min-width: 44rem; }
+}
+#student-table tbody tr.is-picked { background-color: #e8f2ec; box-shadow: inset 3px 0 0 0 var(--class-green); }
+
+/* 成绩用数字 + 文字两重提示，不单靠颜色表达"及格/不及格"；
+   提示文字放在真实 DOM 里（score-hint），而不是 CSS ::after——CSS 生成内容
+   不是所有读屏软件都会读，放进 DOM 才可靠（可访问性研究任务一的修复项） */
+.score-tag { font-variant-numeric: tabular-nums; font-weight: 600; }
+.score-tag.is-low { color: #a3521c; }
+.score-hint { font-weight: 400; color: var(--class-muted); margin-left: .25rem; }
+
+.att-badge { border-radius: .35rem; padding: .2rem .5rem; font-size: .8rem; }
+.att-badge.att-ok { background: #dff1e4; color: #1f6b4f; }
+.att-badge.att-leave { background: #fbeed3; color: #8a6114; }
+.att-badge.att-miss { background: #f4e1dd; color: #a33b2e; }
+
+/* 行内编辑输入框 */
+.inline-input { width: 5.5rem; }
+select.inline-input { width: 6.5rem; }
+
+/* ---------- 图表容器：必须有高度，否则 ECharts/Chart.js 画布为 0 ---------- */
+.chart-box { height: 360px; width: 100%; }
+@media (max-width: 575.98px) { .chart-box { height: 300px; } }
+
+/* ---------- 页脚 ---------- */
+.site-footer { background-color: #fff; border-top: 1px solid var(--class-line); }
+.site-footer code { color: var(--class-green); }
+
+/* ---------- 窄屏防溢出：长串（学号、报错信息）不撑破容器 ---------- */
+#status,
+#data-source,
+#roster-summary,
+#form-tip,
+.module { overflow-wrap: anywhere; }
+
+@media print {
+  .navbar { position: static !important; }
+  .skip-link { display: none; }
+}
