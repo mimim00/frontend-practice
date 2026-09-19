@@ -2,21 +2,22 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>校园角标</title>
-<script src="../../libs/aframe.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>校园三维导览 · 迷你版校园信息中心</title>
+<link href="../../libs/bootstrap.min.css" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<script src="../libs/aframe.min.js"></script>
 <style>
   body { margin: 0; }
-  #back {
-    position: fixed; right: 14px; top: 12px; z-index: 9; color: #fff;
+  #tip {
+    position: fixed; left: 14px; top: 12px; z-index: 9; color: #fff;
     font: 13px/1.8 "Microsoft YaHei", sans-serif;
     background: rgba(0, 0, 0, .42); border-radius: 8px; padding: 8px 12px;
-    text-decoration: none;
   }
-  #back:hover { background: rgba(0, 0, 0, .6); }
+  #tip b { color: #ffe082; }
 </style>
 </head>
 <body>
-<a id="back" href="../index.html#home">← 返回首页</a>
 <a-scene>
   <!-- ========= 环境 ===================== -->
   <a-sky color="#aee3f7"></a-sky>
@@ -44,8 +45,7 @@
   </a-sphere>
   <a-light type="point" position="-3 2.6 -4" color="#fff59d" intensity="0.6"></a-light>
 
-  <!-- ===================== 课后练习 2：点击变色的雕塑 ===================== -->
-  <!-- cursor 是"准星"，注视即瞄准；非 VR 环境下鼠标点击也能触发 onclick -->
+  
   <a-cylinder position="-1.4 0.5 -2.6" radius="0.5" height="1" color="#cfd8dc"
               material="metalness: 0.4; roughness: 0.35"></a-cylinder>
   <a-sphere position="-1.4 1.35 -2.6" radius="0.42" color="#8d6e63" data-raycastable
@@ -53,7 +53,7 @@
             animation__spin="property: rotation; to: 0 360 0; dur: 10000; loop: true; easing: linear">
   </a-sphere>
 
-  <!-- ===================== 几棵树，让场景不空 ===================== -->
+  <!-- ===================== 棵树，让场景不空 ===================== -->
   <a-cylinder position="-5 0.6 -7" radius="0.22" height="1.2" color="#6d4c41"></a-cylinder>
   <a-sphere position="-5 1.7 -7" radius="0.9" color="#2e7d32"></a-sphere>
   <a-cylinder position="5 0.6 -7.5" radius="0.22" height="1.2" color="#6d4c41"></a-cylinder>
