@@ -54,7 +54,7 @@ window.CAMPUS_STUDYROOMS = {
       "name": "梓苑二楼自习室",
       "building": "梓苑",
       "floor": 2,
-      "seats": 88,
+      "seats": 68,
       "occupied": 0,
       "status": "维修",
       "hours": "暂停开放"

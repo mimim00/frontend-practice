@@ -1,26 +1,8 @@
-/* ============================================================
- * app.js —— 迷你版校园信息中心（第八次课课堂案例复现）
- *
- * 数据流（先想清楚再写代码，别边写边改结构）：
- *   data/studyrooms.json  ──fetch──┐
- *                                  ├─→ state.all ──applyFilter()──→ 首页卡片
- *   data/studyrooms.js（内嵌副本）──┘        │                      自习室表格
- *   （fetch 失败时用内嵌副本兜底）            └──────────────────→ 两张图表
- *
- * 四个模块共用同一份 state，筛选改的是数据源，图表只是重新渲染，
- * 不存在"表格一份数据、图表另一份数据"对不上的情况。
- *
- * 技术分工（见讲义"各技术的职责边界"）：
- *   jQuery    → DOM 查询与事件委托
- *   原生 JS   → 过滤、聚合、派生数据等核心逻辑
- *   ECharts   → 使用率横向柱状图
- *   Chart.js  → 开放状态圆环图
- * 两种图表画的不是同一件事，不重复（避免"两库画同一张图"）。
- * ============================================================ */
+
 
 'use strict';
 
-/* ---------- 状态集中放一处，别散成一堆全局变量 ---------- */
+
 const state = {
   all: null,              // 原始数据 { title, source, updated, rooms: [] }
   usedFallback: false,    // 是否走了内嵌数据兜底
@@ -302,7 +284,7 @@ const renderStatusChart = () => {
   const scope = describeFilter();
 
   if (charts.status) {
-    charts.status.destroy();    // 防重复初始化：同一 canvas 重建实例必须先销毁
+    charts.status.destroy();    
   }
   charts.status = new Chart(document.querySelector('#status-chart'), {
     type: 'doughnut',
@@ -349,9 +331,6 @@ const describeFilter = () => {
   return parts.join(' · ');
 };
 
-/* ============================================================
- * 7. 事件绑定：筛选栏用事件委托，一行管住两组按钮
- * ============================================================ */
 const syncFilterButtons = () => {
   $('#floor-filters .btn').each(function () {
     const on = String($(this).data('floor')) === String(state.filter.floor);
