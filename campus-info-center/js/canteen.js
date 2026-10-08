@@ -31,7 +31,7 @@
     return m >= a || m <= b; // 跨零点营业（如 17:00-24:00）
   }
 
-  /* ---------- 初始化 ---------- */
+  
   function init() {
     bindToolbar();
     detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
@@ -93,7 +93,7 @@
     });
   }
 
-  /* ---------- 渲染 ---------- */
+  
   function render() {
     var list = applyFilter();
     document.getElementById('canteenList').innerHTML = list.map(cardHtml).join('');
@@ -177,7 +177,7 @@
     detailModal.show();
   }
 
-  /* ---------- 事件绑定 ---------- */
+  
   function bindToolbar() {
     document.getElementById('kwCanteen').addEventListener('input', function () {
       filters.kw = this.value;
