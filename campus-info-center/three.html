@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>三维校园 · 智慧校园信息与数据展示中心</title>
+  <meta name="description" content="基于 Three.js 的三维校园场景：建筑、树木、道路，支持旋转缩放与点击查询">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏫</text></svg>">
+  <link rel="stylesheet" href="lib/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ==================== 导航栏 ==================== -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-app sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">🏫 智慧校园 · 信息与数据展示中心</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+              aria-controls="mainNav" aria-expanded="false" aria-label="切换导航">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" data-page="index.html" href="index.html">🏠 首页</a></li>
+          <li class="nav-item"><a class="nav-link" data-page="study.html" href="study.html">📚 自习室查询</a></li>
+          <li class="nav-item"><a class="nav-link" data-page="canteen.html" href="canteen.html">🍜 食堂查询</a></li>
+          <li class="nav-item"><a class="nav-link" data-page="dashboard.html" href="dashboard.html">📊 数据可视化</a></li>
+          <li class="nav-item"><a class="nav-link" data-page="three.html" href="three.html">🏗️ 三维校园</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-4 pb-5">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+      <div>
+        <h1 class="h3 fw-bold mb-0">🏗️ 三维校园导览</h1>
+        <p class="text-muted small mb-0">Three.js 场景：鼠标拖拽旋转 · 滚轮缩放 · 点击建筑查看信息</p>
+      </div>
+      <div class="btn-group" role="group" aria-label="场景控制">
+        <button type="button" class="btn btn-outline-primary btn-sm" id="btnAuto">⏸ 暂停旋转</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm" id="btnReset">🧭 复位视角</button>
+      </div>
+    </div>
+
+    <!-- WebGL 不可用时的错误提示（默认隐藏） -->
+    <div id="webglError" class="alert alert-danger d-none" role="alert">
+      <strong>⚠️ 三维场景初始化失败：</strong>您的浏览器不支持 WebGL，或已禁用硬件加速。
+      请更换最新版 Chrome / Edge 浏览器，或在浏览器设置中开启「使用硬件加速」，然后刷新本页。
+    </div>
+
+    <!-- ==================== 三维场景 ==================== -->
+    <section class="three-stage shadow-sm" aria-label="三维校园场景">
+      <div id="threeCanvas" class="three-canvas" role="img" aria-label="三维校园场景，可拖拽旋转、滚轮缩放、点击建筑查看信息"></div>
+
+      <!-- 建筑信息面板 -->
+      <div id="infoPanel" class="info-panel card shadow d-none">
+        <div class="card-body p-3">
+          <div class="d-flex justify-content-between align-items-start">
+            <h2 class="h6 fw-bold mb-1" id="infoTitle"></h2>
+            <button type="button" class="btn-close" id="btnCloseInfo" aria-label="关闭信息面板"></button>
+          </div>
+          <div class="small text-muted" id="infoBody"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 图例与说明 -->
+    <div class="row g-3 mt-3">
+      <div class="col-12 col-lg-7">
+        <div class="card shadow-sm h-100">
+          <div class="card-body small">
+            <h2 class="h6 fw-bold">🗺️ 场景构成</h2>
+            <div class="row g-2">
+              <div class="col-6"><span class="legend-dot" style="background:#7C8E9E"></span>教学楼 / 图书馆</div>
+              <div class="col-6"><span class="legend-dot" style="background:#C2A48F"></span>食堂 / 餐厅</div>
+              <div class="col-6"><span class="legend-dot" style="background:#7E9678"></span>树木绿化</div>
+              <div class="col-6"><span class="legend-dot" style="background:#A9B7A0"></span>草坪道路</div>
+            </div>
+            <p class="text-muted mt-2 mb-0">
+              场景包含 11 栋建筑与 40 余棵树木：图书馆、三栋教学楼、三座食堂、体育馆、医学院楼、宿舍与活动中心。
+              建筑墙面使用 Canvas 生成的窗格贴图，其中随机点亮部分窗户模拟自习室灯光；
+              每栋建筑上方悬浮文字标牌，点击建筑会高亮并弹出详细信息。
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-5">
+        <div class="card shadow-sm h-100">
+          <div class="card-body small">
+            <h2 class="h6 fw-bold">🕹️ 操作说明</h2>
+            <ul class="mb-0 ps-3">
+              <li><strong>旋转视角：</strong>按住鼠标左键（或手指）拖拽；</li>
+              <li><strong>缩放：</strong>滚动鼠标滚轮 / 双指捏合；</li>
+              <li><strong>自动旋转：</strong>点击右上角「暂停 / 继续旋转」按钮；</li>
+              <li><strong>查询建筑：</strong>单击任意建筑，高亮并在右上角显示名称、开放时间与用途；</li>
+              <li><strong>复位：</strong>点击「复位视角」回到初始机位。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="app-footer mt-auto py-4">
+    <div class="container">
+      <div class="row g-3">
+        <div class="col-md-6"><strong class="text-white">软件开发综合实践 · 期末大作业</strong><div>题目：信息与数据展示中心 —— 智慧校园公共服务</div></div>
+        <div class="col-md-6 text-md-end">
+          <div>技术栈：HTML5 · CSS3 · JavaScript(ES6) · jQuery · Bootstrap · ECharts · Three.js</div>
+          <div class="mt-1">运行说明见 <a href="README.md">README.md</a></div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="lib/jquery.min.js"></script>
+  <script src="lib/bootstrap.bundle.min.js"></script>
+  <script src="lib/three.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/three-scene.js"></script>
+</body>
+</html>

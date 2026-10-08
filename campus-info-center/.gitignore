@@ -1,0 +1,5 @@
+# 无需忽略的生成物较少，仅排除常见系统文件
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.log

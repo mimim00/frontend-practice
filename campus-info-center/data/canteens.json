@@ -1,0 +1,129 @@
+[
+  {
+    "id": 1,
+    "name": "第一食堂",
+    "campus": "东区",
+    "floor": "1-2层",
+    "hours": "06:30-20:30",
+    "queue": "中",
+    "rating": 4.5,
+    "specialties": ["大盘鸡拌面", "瓦罐煨汤", "铁板黑椒牛柳"],
+    "windows": [
+      { "name": "兰州拉面", "category": "面食", "price": 12, "rating": 4.8, "sales": 326 },
+      { "name": "麻辣香锅", "category": "川菜", "price": 15, "rating": 4.6, "sales": 412 },
+      { "name": "铁板饭", "category": "快餐", "price": 14, "rating": 4.3, "sales": 389 },
+      { "name": "瓦罐汤", "category": "汤类", "price": 8, "rating": 4.5, "sales": 203 },
+      { "name": "自选快餐", "category": "快餐", "price": 11, "rating": 4.1, "sales": 566 }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "第二食堂",
+    "campus": "西区",
+    "floor": "1-3层",
+    "hours": "06:30-21:00",
+    "queue": "多",
+    "rating": 4.3,
+    "specialties": ["黄焖鸡米饭", "重庆小面", "自选麻辣烫"],
+    "windows": [
+      { "name": "黄焖鸡米饭", "category": "快餐", "price": 13, "rating": 4.4, "sales": 301 },
+      { "name": "重庆小面", "category": "面食", "price": 11, "rating": 4.5, "sales": 278 },
+      { "name": "烤肉拌饭", "category": "快餐", "price": 14, "rating": 4.2, "sales": 244 },
+      { "name": "麻辣烫", "category": "小吃", "price": 13, "rating": 4.6, "sales": 355 }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "第三食堂",
+    "campus": "南区",
+    "floor": "1-2层",
+    "hours": "07:00-20:00",
+    "queue": "少",
+    "rating": 4.2,
+    "specialties": ["叉烧饭", "鲜虾水饺", "艇仔粥"],
+    "windows": [
+      { "name": "粤式烧腊", "category": "快餐", "price": 16, "rating": 4.4, "sales": 187 },
+      { "name": "螺蛳粉", "category": "小吃", "price": 12, "rating": 4.3, "sales": 230 },
+      { "name": "粥铺", "category": "早餐", "price": 6, "rating": 4.2, "sales": 160 },
+      { "name": "饺子馆", "category": "面食", "price": 12, "rating": 4.5, "sales": 210 }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "民族餐厅",
+    "campus": "西区",
+    "floor": "1层",
+    "hours": "07:00-21:00",
+    "queue": "少",
+    "rating": 4.7,
+    "specialties": ["新疆大盘鸡", "手抓饭", "红柳羊肉串"],
+    "windows": [
+      { "name": "新疆大盘鸡", "category": "西北菜", "price": 18, "rating": 4.8, "sales": 120 },
+      { "name": "手抓饭", "category": "西北菜", "price": 15, "rating": 4.7, "sales": 98 },
+      { "name": "羊肉串", "category": "小吃", "price": 4, "rating": 4.9, "sales": 356 },
+      { "name": "老酸奶", "category": "饮品", "price": 6, "rating": 4.6, "sales": 140 }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "教工食堂",
+    "campus": "东区",
+    "floor": "2层",
+    "hours": "11:00-13:30",
+    "queue": "少",
+    "rating": 4.4,
+    "specialties": ["清蒸鲈鱼", "时蔬小炒"],
+    "windows": [
+      { "name": "小炒窗口", "category": "家常菜", "price": 16, "rating": 4.5, "sales": 150 },
+      { "name": "自助餐", "category": "自助", "price": 22, "rating": 4.3, "sales": 89 }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "风味小吃城",
+    "campus": "南区",
+    "floor": "1层",
+    "hours": "10:00-22:30",
+    "queue": "中",
+    "rating": 4.1,
+    "specialties": ["香辣炸鸡", "珍珠奶茶", "烤冷面"],
+    "windows": [
+      { "name": "炸鸡汉堡", "category": "西式快餐", "price": 15, "rating": 4.2, "sales": 320 },
+      { "name": "章鱼小丸子", "category": "小吃", "price": 8, "rating": 4.0, "sales": 180 },
+      { "name": "奶茶", "category": "饮品", "price": 9, "rating": 4.4, "sales": 410 },
+      { "name": "烤冷面", "category": "小吃", "price": 7, "rating": 4.1, "sales": 260 }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "咖啡简餐厅",
+    "campus": "东区",
+    "floor": "1层",
+    "hours": "08:30-21:00",
+    "queue": "少",
+    "rating": 4.6,
+    "specialties": ["燕麦拿铁", "提拉米苏", "罗勒意面"],
+    "windows": [
+      { "name": "咖啡", "category": "饮品", "price": 18, "rating": 4.7, "sales": 260 },
+      { "name": "三明治", "category": "西式简餐", "price": 14, "rating": 4.5, "sales": 120 },
+      { "name": "意面", "category": "西式简餐", "price": 22, "rating": 4.6, "sales": 95 },
+      { "name": "甜点", "category": "甜品", "price": 15, "rating": 4.8, "sales": 140 }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "深夜食堂",
+    "campus": "西区",
+    "floor": "1层",
+    "hours": "17:00-24:00",
+    "queue": "多",
+    "rating": 4.5,
+    "specialties": ["万州烤鱼", "砂锅粥", "炭火烧烤"],
+    "windows": [
+      { "name": "万州烤鱼", "category": "川菜", "price": 28, "rating": 4.7, "sales": 88 },
+      { "name": "砂锅粥", "category": "汤类", "price": 12, "rating": 4.5, "sales": 150 },
+      { "name": "烧烤", "category": "小吃", "price": 18, "rating": 4.6, "sales": 220 },
+      { "name": "精酿啤酒", "category": "饮品", "price": 8, "rating": 4.2, "sales": 170 }
+    ]
+  }
+]

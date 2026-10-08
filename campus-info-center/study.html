@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>自习室查询 · 智慧校园信息与数据展示中心</title>
+  <meta name="description" content="自习室筛选、搜索、添加、修改、删除">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏫</text></svg>">
+  <link rel="stylesheet" href="lib/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ==================== 导航栏 ==================== -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-app sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">🏫 智慧校园 · 信息与数据展示中心</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+              aria-controls="mainNav" aria-expanded="false" aria-label="切换导航">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" data-page="index.html" href="index.html">🏠 首页</a></li>
+          <li class="nav-item"><a class="nav-link" data-page="study.html" href="study.html">📚 自习室查询</a></li>
+          <li class="nav-item"><a class="nav-link" data-page="canteen.html" href="canteen.html">🍜 食堂查询</a></li>
+          <li class="nav-item"><a class="nav-link" data-page="dashboard.html" href="dashboard.html">📊 数据可视化</a></li>
+          <li class="nav-item"><a class="nav-link" data-page="three.html" href="three.html">🏗️ 三维校园</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-4 pb-5">
+    <h1 class="h3 fw-bold mb-1">📚 自习室查询与管理</h1>
+    <p class="text-muted small mb-3">支持关键字搜索、校区 / 楼栋 / 状态筛选、排序，以及添加、修改、删除自习室（修改保存在浏览器本地）。</p>
+
+    <!-- 错误提示区域 -->
+    <div id="errorArea" class="mb-3"></div>
+
+    <!-- ==================== 查询工具栏 ==================== -->
+    <section class="card shadow-sm mb-3" aria-label="查询工具栏">
+      <div class="card-body">
+        <div class="row g-2 align-items-center">
+          <div class="col-12 col-md-4 col-lg-3">
+            <div class="input-group">
+              <span class="input-group-text">🔍</span>
+              <input type="search" id="kwSearch" class="form-control" placeholder="搜索名称 / 楼栋 / 设施…" aria-label="搜索关键字">
+            </div>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <select id="fCampus" class="form-select toolbar-select" aria-label="按校区筛选">
+              <option value="">全部校区</option>
+            </select>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <select id="fBuilding" class="form-select toolbar-select" aria-label="按楼栋筛选">
+              <option value="">全部楼栋</option>
+            </select>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <select id="fStatus" class="form-select toolbar-select" aria-label="按状态筛选">
+              <option value="">全部状态</option>
+              <option value="open">开放中</option>
+              <option value="full">已满座</option>
+              <option value="closed">已关闭</option>
+            </select>
+          </div>
+          <div class="col-6 col-md-4 col-lg-2">
+            <select id="fSort" class="form-select toolbar-select" aria-label="排序方式">
+              <option value="usage">上座率从高到低</option>
+              <option value="seats">座位数从多到少</option>
+              <option value="name">名称排序</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-4 col-lg-1 d-grid">
+            <button id="btnReset" class="btn btn-outline-secondary w-100">↺ 重置</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 统计条 ==================== -->
+    <div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
+      <span class="badge text-bg-light border">共 <span id="statRooms">0</span> 间</span>
+      <span class="badge text-bg-light border">可用座位 <span id="statSeats">0</span> 个</span>
+      <span class="badge text-bg-light border">平均上座率 <span id="statAvg">0%</span></span>
+      <span class="ms-auto d-flex gap-2">
+        <button id="btnAdd" class="btn btn-sm btn-primary">＋ 添加自习室</button>
+        <button id="btnRestore" class="btn btn-sm btn-outline-secondary" title="清除本地修改，恢复 JSON 原始数据">♻️ 恢复原始数据</button>
+      </span>
+    </div>
+
+    <!-- ==================== 列表 ==================== -->
+    <section aria-label="自习室列表">
+      <div id="roomList" class="row g-3"></div>
+      <div id="roomEmpty" class="card shadow-sm d-none">
+        <div class="card-body empty-state">
+          <span class="empty-icon">🔍</span>
+          <div class="fw-bold mb-1">没有找到符合条件的自习室</div>
+          <div class="small">试试清空关键字或放宽筛选条件，也可以点击上方「＋ 添加自习室」按钮。</div>
+        </div>
+      </div>
+    </section>
+
+    <p class="text-muted small mt-3 mb-0">
+      ℹ️ 基础数据来自 <code>data/study_rooms.json</code>；添加 / 修改 / 删除的结果保存在浏览器 localStorage 中，
+      点击「恢复原始数据」可回到 JSON 初始状态。
+    </p>
+  </main>
+
+  <!-- ==================== 添加 / 修改弹窗 ==================== -->
+  <div class="modal fade" id="roomModal" tabindex="-1" aria-labelledby="roomModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="roomModalTitle">添加自习室</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+        </div>
+        <form id="roomForm" novalidate>
+          <div class="modal-body">
+            <input type="hidden" id="inpId">
+            <div class="row g-3">
+              <div class="col-12 col-md-8">
+                <label class="form-label" for="inpName">名称 <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="inpName" required placeholder="如：图书馆·自习区C">
+                <div class="invalid-feedback">请输入自习室名称，且不能与现有名称重复。</div>
+              </div>
+              <div class="col-12 col-md-4">
+                <label class="form-label" for="inpCampus">校区 <span class="text-danger">*</span></label>
+                <select class="form-select" id="inpCampus" required>
+                  <option value="">请选择</option>
+                  <option>东区</option>
+                  <option>西区</option>
+                  <option>南区</option>
+                </select>
+                <div class="invalid-feedback">请选择校区。</div>
+              </div>
+              <div class="col-6 col-md-4">
+                <label class="form-label" for="inpBuilding">所在楼栋 <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="inpBuilding" required placeholder="如：逸夫图书馆">
+                <div class="invalid-feedback">请输入所在楼栋。</div>
+              </div>
+              <div class="col-6 col-md-4">
+                <label class="form-label" for="inpFloor">楼层</label>
+                <input type="number" class="form-control" id="inpFloor" min="1" max="30" value="1">
+                <div class="invalid-feedback">楼层为 1-30 的整数。</div>
+              </div>
+              <div class="col-6 col-md-4">
+                <label class="form-label" for="inpStatus">状态 <span class="text-danger">*</span></label>
+                <select class="form-select" id="inpStatus" required>
+                  <option value="open">开放中</option>
+                  <option value="full">已满座</option>
+                  <option value="closed">已关闭</option>
+                </select>
+              </div>
+              <div class="col-6 col-md-4">
+                <label class="form-label" for="inpSeats">座位总数 <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" id="inpSeats" min="1" max="999" required placeholder="如：100">
+                <div class="invalid-feedback">请输入 1-999 的整数。</div>
+              </div>
+              <div class="col-6 col-md-4">
+                <label class="form-label" for="inpAvail">可用座位 <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" id="inpAvail" min="0" max="999" required placeholder="如：30">
+                <div class="invalid-feedback" id="fbAvail">请输入 0 到座位总数之间的整数。</div>
+              </div>
+              <div class="col-6 col-md-4">
+                <label class="form-label" for="inpHours">开放时间 <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="inpHours" required placeholder="如：08:00-22:00">
+                <div class="invalid-feedback">请输入开放时间（如 08:00-22:00 或 全天开放）。</div>
+              </div>
+              <div class="col-12">
+                <label class="form-label d-block">设施（可多选）</label>
+                <div class="form-check form-check-inline"><input class="form-check-input facility-cb" type="checkbox" value="空调" id="fc1"><label class="form-check-label" for="fc1">空调</label></div>
+                <div class="form-check form-check-inline"><input class="form-check-input facility-cb" type="checkbox" value="插座" id="fc2"><label class="form-check-label" for="fc2">插座</label></div>
+                <div class="form-check form-check-inline"><input class="form-check-input facility-cb" type="checkbox" value="饮水机" id="fc3"><label class="form-check-label" for="fc3">饮水机</label></div>
+                <div class="form-check form-check-inline"><input class="form-check-input facility-cb" type="checkbox" value="WiFi" id="fc4"><label class="form-check-label" for="fc4">WiFi</label></div>
+                <div class="form-check form-check-inline"><input class="form-check-input facility-cb" type="checkbox" value="研讨间" id="fc5"><label class="form-check-label" for="fc5">研讨间</label></div>
+                <div class="form-check form-check-inline"><input class="form-check-input facility-cb" type="checkbox" value="朗读区" id="fc6"><label class="form-check-label" for="fc6">朗读区</label></div>
+                <div class="form-check form-check-inline"><input class="form-check-input facility-cb" type="checkbox" value="沙发区" id="fc7"><label class="form-check-label" for="fc7">沙发区</label></div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">取消</button>
+            <button type="submit" class="btn btn-primary">保存</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 删除确认弹窗 ==================== -->
+  <div class="modal fade" id="delModal" tabindex="-1" aria-labelledby="delModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="delModalTitle">删除确认</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+        </div>
+        <div class="modal-body">
+          确定要删除「<strong id="delName"></strong>」吗？此操作可点击「恢复原始数据」撤销。
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-danger" id="btnDelConfirm">确认删除</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer mt-auto py-4">
+    <div class="container">
+      <div class="row g-3">
+        <div class="col-md-6"><strong class="text-white">软件开发综合实践 · 期末大作业</strong><div>题目：信息与数据展示中心 —— 智慧校园公共服务</div></div>
+        <div class="col-md-6 text-md-end">
+          <div>技术栈：HTML5 · CSS3 · JavaScript(ES6) · jQuery · Bootstrap · ECharts · Three.js</div>
+          <div class="mt-1">运行说明见 <a href="README.md">README.md</a></div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="lib/jquery.min.js"></script>
+  <script src="lib/bootstrap.bundle.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/study.js"></script>
+</body>
+</html>

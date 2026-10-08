@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>数据可视化 · 智慧校园信息与数据展示中心</title>
+  <meta name="description" content="基于 ECharts 的校园数据可视化：柱状图、折线图、饼图、雷达图">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏫</text></svg>">
+  <link rel="stylesheet" href="lib/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ==================== 导航栏 ==================== -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-app sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">🏫 智慧校园 · 信息与数据展示中心</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+              aria-controls="mainNav" aria-expanded="false" aria-label="切换导航">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" data-page="index.html" href="index.html">🏠 首页</a></li>
+          <li class="nav-item"><a class="nav-link" data-page="study.html" href="study.html">📚 自习室查询</a></li>
+          <li class="nav-item"><a class="nav-link" data-page="canteen.html" href="canteen.html">🍜 食堂查询</a></li>
+          <li class="nav-item"><a class="nav-link" data-page="dashboard.html" href="dashboard.html">📊 数据可视化</a></li>
+          <li class="nav-item"><a class="nav-link" data-page="three.html" href="three.html">🏗️ 三维校园</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-4 pb-5">
+    <h1 class="h3 fw-bold mb-1">📊 校园数据可视化</h1>
+    <p class="text-muted small mb-3">基于 ECharts 5 绘制，共 4 类图表：柱状图、折线图、饼图、雷达图。数据来自 <code>data/stats.json</code>。</p>
+
+    <!-- 错误提示区域 -->
+    <div id="errorArea" class="mb-3"></div>
+
+    <!-- 顶部统计 -->
+    <div class="row g-3 mb-4">
+      <div class="col-4">
+        <div class="card stat-card shadow-sm h-100">
+          <div class="card-body text-center py-3">
+            <div class="stat-num tone-blue" id="dRooms">--</div>
+            <div class="text-muted small">自习室总数</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="card stat-card shadow-sm h-100">
+          <div class="card-body text-center py-3">
+            <div class="stat-num tone-green" id="dSeats">--</div>
+            <div class="text-muted small">当前可用座位</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="card stat-card shadow-sm h-100">
+          <div class="card-body text-center py-3">
+            <div class="stat-num tone-amber" id="dCanteens">--</div>
+            <div class="text-muted small">食堂数量</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 图表区 -->
+    <div class="row g-4">
+      <div class="col-12 col-xl-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h2 class="h6 fw-bold">🏢 各楼栋自习室上座率（柱状图）</h2>
+            <p class="chart-desc mb-2">上座率 =（总座位 - 可用座位）/ 总座位，横线为平均上座率。</p>
+            <div id="chartUsage" class="chart-box"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-xl-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h2 class="h6 fw-bold">📈 一周自习室使用趋势（折线图）</h2>
+            <p class="chart-desc mb-2">自习人次在周五达到峰值，周六日明显回落，与可用座位数量呈反向变化。</p>
+            <div id="chartTrend" class="chart-box"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-xl-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h2 class="h6 fw-bold">🥧 食堂档口类别占比（饼图 / 环形图）</h2>
+            <p class="chart-desc mb-2">按 data/canteens.json 中 32 个档口的类别统计（百分比）。</p>
+            <div id="chartPie" class="chart-box"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-xl-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h2 class="h6 fw-bold">🕸️ 三家食堂服务评价对比（雷达图）</h2>
+            <p class="chart-desc mb-2">五个维度满分为 100，模拟评分数据，便于直观对比各家食堂的优劣势。</p>
+            <div id="chartRadar" class="chart-box"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-light border shadow-sm mt-4 small">
+      <strong>📌 数据说明：</strong>本页所有图表数据均来自本地 JSON 文件 <code>data/stats.json</code>，
+      通过 <code>fetch()</code> 异步加载后解析，再传入 ECharts 的 <code>setOption()</code> 渲染；
+      窗口尺寸变化时自动调用 <code>resize()</code> 保持图表自适应。
+    </div>
+  </main>
+
+  <footer class="app-footer mt-auto py-4">
+    <div class="container">
+      <div class="row g-3">
+        <div class="col-md-6"><strong class="text-white">软件开发综合实践 · 期末大作业</strong><div>题目：信息与数据展示中心 —— 智慧校园公共服务</div></div>
+        <div class="col-md-6 text-md-end">
+          <div>技术栈：HTML5 · CSS3 · JavaScript(ES6) · jQuery · Bootstrap · ECharts · Three.js</div>
+          <div class="mt-1">运行说明见 <a href="README.md">README.md</a></div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="lib/jquery.min.js"></script>
+  <script src="lib/bootstrap.bundle.min.js"></script>
+  <script src="lib/echarts.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

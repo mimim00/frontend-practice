@@ -1,0 +1,33 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "启动本地服务器（Node）",
+      "detail": "零依赖 Node 静态服务器，启动后浏览器访问 http://localhost:8000",
+      "type": "shell",
+      "command": "node server.js",
+      "options": { "cwd": "${workspaceFolder}" },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
+      "label": "启动本地服务器（Python）",
+      "detail": "已安装 Python 时可使用此任务",
+      "type": "shell",
+      "command": "python -m http.server 8000",
+      "options": { "cwd": "${workspaceFolder}" },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "reveal": "always", "panel": "dedicated" }
+    },
+    {
+      "label": "在浏览器打开首页",
+      "detail": "先启动服务器任务，再运行本任务打开页面",
+      "type": "shell",
+      "command": "start http://localhost:8000",
+      "problemMatcher": [],
+      "presentation": { "reveal": "never" }
+    }
+  ]
+}

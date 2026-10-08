@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>食堂查询 · 智慧校园信息与数据展示中心</title>
+  <meta name="description" content="食堂与档口搜索、筛选、详情查询">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏫</text></svg>">
+  <link rel="stylesheet" href="lib/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ==================== 导航栏 ==================== -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-app sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">🏫 智慧校园 · 信息与数据展示中心</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+              aria-controls="mainNav" aria-expanded="false" aria-label="切换导航">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" data-page="index.html" href="index.html">🏠 首页</a></li>
+          <li class="nav-item"><a class="nav-link" data-page="study.html" href="study.html">📚 自习室查询</a></li>
+          <li class="nav-item"><a class="nav-link" data-page="canteen.html" href="canteen.html">🍜 食堂查询</a></li>
+          <li class="nav-item"><a class="nav-link" data-page="dashboard.html" href="dashboard.html">📊 数据可视化</a></li>
+          <li class="nav-item"><a class="nav-link" data-page="three.html" href="three.html">🏗️ 三维校园</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-4 pb-5">
+    <h1 class="h3 fw-bold mb-1">🍜 食堂与档口查询</h1>
+    <p class="text-muted small mb-3">支持按关键字搜索档口 / 菜品，按校区、营业状态筛选，点击「查看详情」了解档口价格、评分与招牌菜。</p>
+
+    <!-- 错误提示区域 -->
+    <div id="errorArea" class="mb-3"></div>
+
+    <!-- ==================== 查询工具栏 ==================== -->
+    <section class="card shadow-sm mb-3" aria-label="查询工具栏">
+      <div class="card-body">
+        <div class="row g-2 align-items-center">
+          <div class="col-12 col-md-4 col-lg-4">
+            <div class="input-group">
+              <span class="input-group-text">🔍</span>
+              <input type="search" id="kwCanteen" class="form-control" placeholder="搜索食堂 / 档口 / 菜品，如：面" aria-label="搜索关键字">
+            </div>
+          </div>
+          <div class="col-6 col-md-4 col-lg-3">
+            <select id="fCampus2" class="form-select toolbar-select" aria-label="按校区筛选">
+              <option value="">全部校区</option>
+            </select>
+          </div>
+          <div class="col-6 col-md-4 col-lg-3">
+            <select id="fStatus2" class="form-select toolbar-select" aria-label="按营业状态筛选">
+              <option value="">全部状态</option>
+              <option value="open">营业中</option>
+              <option value="closed">已打烊</option>
+            </select>
+          </div>
+          <div class="col-6 col-md-4 col-lg-1 d-grid">
+            <button id="btnReset2" class="btn btn-outline-secondary w-100">↺ 重置</button>
+          </div>
+          <div class="col-6 col-md-4 col-lg-1 d-grid">
+            <select id="fSort2" class="form-select toolbar-select" aria-label="排序方式">
+              <option value="rating">评分从高到低</option>
+              <option value="queue">排队从少到多</option>
+              <option value="name">名称排序</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 统计条 ==================== -->
+    <div class="d-flex flex-wrap gap-2 mb-3 small">
+      <span class="badge text-bg-light border">共 <span id="statCanteens">0</span> 家食堂</span>
+      <span class="badge text-bg-light border">营业中 <span id="statOpen">0</span> 家</span>
+      <span class="badge text-bg-light border">档口合计 <span id="statWindows">0</span> 个</span>
+    </div>
+
+    <!-- ==================== 列表 ==================== -->
+    <section aria-label="食堂列表">
+      <div id="canteenList" class="row g-3"></div>
+      <div id="canteenEmpty" class="card shadow-sm d-none">
+        <div class="card-body empty-state">
+          <span class="empty-icon">🍽️</span>
+          <div class="fw-bold mb-1">没有找到符合条件的食堂或档口</div>
+          <div class="small">试试清空关键字，或切换校区 / 状态筛选条件。</div>
+        </div>
+      </div>
+    </section>
+
+    <p class="text-muted small mt-3 mb-0">
+      ℹ️ 数据来自 <code>data/canteens.json</code>，营业状态按当前系统时间与营业时段实时计算，评分与销量为模拟数据。
+    </p>
+  </main>
+
+  <!-- ==================== 食堂详情弹窗 ==================== -->
+  <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="detailTitle">食堂详情</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+        </div>
+        <div class="modal-body" id="detailBody"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer mt-auto py-4">
+    <div class="container">
+      <div class="row g-3">
+        <div class="col-md-6"><strong class="text-white">软件开发综合实践 · 期末大作业</strong><div>题目：信息与数据展示中心 —— 智慧校园公共服务</div></div>
+        <div class="col-md-6 text-md-end">
+          <div>技术栈：HTML5 · CSS3 · JavaScript(ES6) · jQuery · Bootstrap · ECharts · Three.js</div>
+          <div class="mt-1">运行说明见 <a href="README.md">README.md</a></div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="lib/jquery.min.js"></script>
+  <script src="lib/bootstrap.bundle.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/canteen.js"></script>
+</body>
+</html>

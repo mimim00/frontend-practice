@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>智慧校园 · 信息与数据展示中心</title>
+  <meta name="description" content="校园公共服务信息与数据展示中心：自习室、食堂、数据可视化、三维校园">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏫</text></svg>">
+  <link rel="stylesheet" href="lib/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ==================== 导航栏 ==================== -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-app sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">🏫 智慧校园 · 信息与数据展示中心</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+              aria-controls="mainNav" aria-expanded="false" aria-label="切换导航">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" data-page="index.html" href="index.html">🏠 首页</a></li>
+          <li class="nav-item"><a class="nav-link" data-page="study.html" href="study.html">📚 自习室查询</a></li>
+          <li class="nav-item"><a class="nav-link" data-page="canteen.html" href="canteen.html">🍜 食堂查询</a></li>
+          <li class="nav-item"><a class="nav-link" data-page="dashboard.html" href="dashboard.html">📊 数据可视化</a></li>
+          <li class="nav-item"><a class="nav-link" data-page="three.html" href="three.html">🏗️ 三维校园</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==================== Hero ==================== -->
+  <header class="hero text-center">
+    <div class="container position-relative">
+      <span class="badge tech-badge mb-2">软件开发综合实践 · 期末大作业</span>
+      <h1 class="display-5 mb-2">智慧校园 · 信息与数据展示中心</h1>
+      <p class="lead mb-1 opacity-75">自习室座位实时查询 · 食堂档口搜索 · 校园数据可视化 · 三维校园导览</p>
+      <p class="mb-3">
+        <span class="badge tech-badge">HTML5</span>
+        <span class="badge tech-badge">CSS3</span>
+        <span class="badge tech-badge">JavaScript(ES6)</span>
+        <span class="badge tech-badge">jQuery 3.7</span>
+        <span class="badge tech-badge">Bootstrap 5.3</span>
+        <span class="badge tech-badge">ECharts 5</span>
+        <span class="badge tech-badge">Three.js</span>
+      </p>
+      <a href="dashboard.html" class="btn btn-light btn-lg me-2 mb-2">📊 查看数据大屏</a>
+      <a href="three.html" class="btn btn-outline-light btn-lg mb-2">🏗️ 进入三维校园</a>
+    </div>
+  </header>
+
+  <main class="container pb-5">
+    <!-- 错误提示区域（JSON 加载失败时显示） -->
+    <div id="errorArea" class="mb-3"></div>
+
+    <!-- ==================== 数据总览统计卡片 ==================== -->
+    <section aria-label="数据总览">
+      <h2 class="h5 fw-bold mb-3">📌 今日数据总览</h2>
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-lg-3">
+          <div class="card stat-card shadow-sm h-100">
+            <div class="card-body d-flex align-items-center">
+              <div class="stat-icon stat-icon--blue me-3">📚</div>
+              <div>
+                <div class="stat-num" id="sRooms">--</div>
+                <div class="text-muted small">自习室（间）</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="card stat-card shadow-sm h-100">
+            <div class="card-body d-flex align-items-center">
+              <div class="stat-icon stat-icon--green me-3">✅</div>
+              <div>
+                <div class="stat-num" id="sOpen">--</div>
+                <div class="text-muted small">开放中（间）</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="card stat-card shadow-sm h-100">
+            <div class="card-body d-flex align-items-center">
+              <div class="stat-icon stat-icon--amber me-3">💺</div>
+              <div>
+                <div class="stat-num" id="sSeats">--</div>
+                <div class="text-muted small">可用座位（个）</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="card stat-card shadow-sm h-100">
+            <div class="card-body d-flex align-items-center">
+              <div class="stat-icon stat-icon--lilac me-3">🍜</div>
+              <div>
+                <div class="stat-num" id="sCanteens">--</div>
+                <div class="text-muted small">食堂（家）</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="row g-4">
+      <!-- ==================== 功能模块入口 ==================== -->
+      <section class="col-12 col-lg-8" aria-label="功能模块">
+        <h2 class="h5 fw-bold mb-3">🧩 功能模块</h2>
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <a class="card feature-card shadow-sm p-3" href="study.html">
+              <div class="d-flex">
+                <div class="feat-icon me-3">📚</div>
+                <div>
+                  <h3 class="h6 fw-bold mb-1">自习室查询</h3>
+                  <p class="text-muted small mb-1">按校区 / 楼栋 / 状态筛选，关键字搜索，支持添加、修改、删除自习室（本地持久化）。</p>
+                  <span class="badge badge-soft-blue">筛选</span>
+                  <span class="badge badge-soft-blue">搜索</span>
+                  <span class="badge badge-soft-blue">增删改</span>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="col-12 col-md-6">
+            <a class="card feature-card shadow-sm p-3" href="canteen.html">
+              <div class="d-flex">
+                <div class="feat-icon me-3">🍜</div>
+                <div>
+                  <h3 class="h6 fw-bold mb-1">食堂查询</h3>
+                  <p class="text-muted small mb-1">搜索档口 / 菜品，按校区、营业状态筛选，查看档口价格、评分与招牌菜。</p>
+                  <span class="badge badge-soft-blue">搜索</span>
+                  <span class="badge badge-soft-blue">筛选</span>
+                  <span class="badge badge-soft-blue">详情</span>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="col-12 col-md-6">
+            <a class="card feature-card shadow-sm p-3" href="dashboard.html">
+              <div class="d-flex">
+                <div class="feat-icon me-3">📊</div>
+                <div>
+                  <h3 class="h6 fw-bold mb-1">数据可视化</h3>
+                  <p class="text-muted small mb-1">柱状图、折线图、饼图、雷达图四类 ECharts 图表，展示自习室与食堂数据。</p>
+                  <span class="badge badge-soft-blue">ECharts</span>
+                  <span class="badge badge-soft-blue">4 类图表</span>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="col-12 col-md-6">
+            <a class="card feature-card shadow-sm p-3" href="three.html">
+              <div class="d-flex">
+                <div class="feat-icon me-3">🏗️</div>
+                <div>
+                  <h3 class="h6 fw-bold mb-1">三维校园</h3>
+                  <p class="text-muted small mb-1">Three.js 三维校园场景：建筑、树木、道路，支持旋转、缩放、点击查看建筑信息。</p>
+                  <span class="badge badge-soft-blue">Three.js</span>
+                  <span class="badge badge-soft-blue">3D</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- 快速开始说明 -->
+        <div class="alert alert-light border shadow-sm mt-4 mb-0">
+          <div class="d-flex">
+            <span class="me-2 fs-5">🚀</span>
+            <div class="small">
+              <strong>快速开始：</strong>请勿直接双击 HTML 文件打开（浏览器会拦截本地 JSON 读取）。
+              请双击项目根目录的 <code>start.bat</code>，或在项目目录执行
+              <code>python -m http.server 8000</code> / <code>node server.js</code>，
+              然后访问 <code>http://localhost:8000</code>。详见 <a href="README.md">README.md</a>。
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== 公告 + 热门自习室 ==================== -->
+      <aside class="col-12 col-lg-4" aria-label="校园公告">
+        <div class="card shadow-sm mb-4">
+          <div class="card-header bg-white fw-bold">📢 校园公告</div>
+          <ul class="list-group list-group-flush small" id="noticeList">
+            <li class="list-group-item text-muted">加载中…</li>
+          </ul>
+        </div>
+        <div class="card shadow-sm">
+          <div class="card-header bg-white fw-bold">🔥 热门自习室（上座率）</div>
+          <div class="card-body" id="hotList">
+            <p class="text-muted small mb-0">加载中…</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- ==================== 页脚 ==================== -->
+  <footer class="app-footer mt-auto py-4">
+    <div class="container">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <strong class="text-white">软件开发综合实践 · 期末大作业</strong>
+          <div>题目：信息与数据展示中心 —— 智慧校园公共服务</div>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <div>技术栈：HTML5 · CSS3 · JavaScript(ES6) · jQuery · Bootstrap · ECharts · Three.js</div>
+          <div class="mt-1">运行说明见 <a href="README.md">README.md</a> ｜ 数据更新时间：<span id="updateTime">--</span></div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="lib/jquery.min.js"></script>
+  <script src="lib/bootstrap.bundle.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>
