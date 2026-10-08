@@ -8,8 +8,8 @@
   'use strict';
 
   var stage, renderer, scene, camera, raycaster;
-  var buildings = [];      
-  var footprints = [];     
+  var buildings = [];      // 可点击的建筑网格
+  var footprints = [];     // 建筑占地（用于避让树木）
   var selected = null;
   var autoRotate = true;
   var theta = 0.65, phi = 1.08, radius = 240;
@@ -17,7 +17,7 @@
 
   var PHI_MIN = 0.35, PHI_MAX = 1.45, RADIUS_MIN = 90, RADIUS_MAX = 420;
 
-  
+  /* ==================== 初始化入口 ==================== */
   function init() {
     stage = document.getElementById('threeCanvas');
     if (!stage || typeof THREE === 'undefined') {
@@ -25,7 +25,7 @@
       return;
     }
 
-    
+    // 捕获 WebGL 初始化异常（部分浏览器 / 显卡不支持）
     try {
       renderer = new THREE.WebGLRenderer({ antialias: true });
     } catch (err) {
@@ -38,6 +38,9 @@
     renderer.setSize(stage.clientWidth, stage.clientHeight);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    // 色调映射：把高光柔和地压回 0~1 区间，避免局部过曝死白
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.0;
     stage.appendChild(renderer.domElement);
 
     scene = new THREE.Scene();
@@ -65,10 +68,13 @@
     }
   }
 
- //灯光
+  /* ==================== 灯光 ====================
+     注意：r128 中多盏灯的强度是线性叠加的，强度之和过大（如 0.95 + 1.05 = 2.0）
+     会把浅色材质推过 1.0 而被裁剪成纯白（过曝）。这里把总强度控制在约 1.1，
+     并让半球光带一点暖灰色调，避免天空光把地面和建筑"洗白"。 */
   function buildLights() {
-    scene.add(new THREE.HemisphereLight(0xffffff, 0x9caf88, 0.95));
-    var sun = new THREE.DirectionalLight(0xffffff, 1.05);
+    scene.add(new THREE.HemisphereLight(0xdfe7ec, 0x6f7c62, 0.5));
+    var sun = new THREE.DirectionalLight(0xfff4e2, 0.6);
     sun.position.set(120, 160, 80);
     sun.castShadow = true;
     sun.shadow.mapSize.set(2048, 2048);
@@ -80,14 +86,14 @@
     scene.add(sun);
   }
 
-  //地面（草坪纹理 + 网格路网）
+  /* ==================== 地面（草坪纹理 + 网格路网） ==================== */
   function groundTexture() {
     var c = document.createElement('canvas');
     c.width = 512; c.height = 512;
     var g = c.getContext('2d');
     g.fillStyle = '#A9B7A0';
     g.fillRect(0, 0, 512, 512);
-    g.strokeStyle = 'rgba(255,255,255,0.28)';
+    g.strokeStyle = 'rgba(255,255,255,0.16)';
     g.lineWidth = 5;
     for (var i = 0; i <= 512; i += 64) {
       g.beginPath(); g.moveTo(i, 0); g.lineTo(i, 512); g.stroke();
@@ -95,13 +101,13 @@
     }
     var t = new THREE.CanvasTexture(c);
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
-    t.repeat.set(7, 7);
+    t.repeat.set(14, 14);   // 地面放大后保持网格密度不变
     return t;
   }
 
   function buildGround() {
     var ground = new THREE.Mesh(
-      new THREE.PlaneGeometry(560, 560),
+      new THREE.PlaneGeometry(1100, 1100),   // 放大地面，避免相机看到地面边缘（露底）
       new THREE.MeshLambertMaterial({ map: groundTexture() })
     );
     ground.rotation.x = -Math.PI / 2;
@@ -115,13 +121,13 @@
     var c = document.createElement('canvas');
     c.width = 64; c.height = 128;
     var g = c.getContext('2d');
-    g.fillStyle = '#f4f7fb';
+    g.fillStyle = '#e9eef4';
     g.fillRect(0, 0, 64, 128);
     var lit = [];
     for (var i = 0; i < 32; i++) { lit.push(Math.random() < 0.16); } // 随机点亮窗户
     for (var row = 0; row < 8; row++) {
       for (var col = 0; col < 4; col++) {
-        g.fillStyle = lit[row * 4 + col] ? '#e8c89a' : '#b9c6d8';
+        g.fillStyle = lit[row * 4 + col] ? '#e3bd8c' : '#a7b6c9';
         g.fillRect(col * 15 + 3, row * 15 + 4, 10, 8);
       }
     }
@@ -307,10 +313,28 @@
     document.getElementById('btnCloseInfo').addEventListener('click', clearSelection);
   }
 
+  /* 高亮：把建筑整体染成灰蓝并只加极低自发光，
+     避免用高强度自发光导致选中建筑再次过曝成死白。 */
+  function applyHighlight(mesh, on) {
+    if (!mesh) { return; }
+    if (mesh.userData._baseColor === undefined) {
+      mesh.userData._baseColor = mesh.material.color.getHex();
+    }
+    if (on) {
+      mesh.material.color.setHex(0x9FB6C6);          // 莫兰迪灰蓝染色
+      mesh.material.emissive.setHex(0x1E2F3A);
+      mesh.material.emissiveIntensity = 0.35;
+    } else {
+      mesh.material.color.setHex(mesh.userData._baseColor);
+      mesh.material.emissive.setHex(0x000000);
+      mesh.material.emissiveIntensity = 1;
+    }
+  }
+
   function selectBuilding(mesh) {
-    if (selected) { selected.material.emissive.setHex(0x000000); }
+    if (selected && selected !== mesh) { applyHighlight(selected, false); }
     selected = mesh;
-    mesh.material.emissive.setHex(0x7C8E9E);
+    applyHighlight(mesh, true);
 
     var u = mesh.userData;
     document.getElementById('infoTitle').textContent = u.name + '（' + u.campus + '）';
@@ -322,7 +346,7 @@
   }
 
   function clearSelection() {
-    if (selected) { selected.material.emissive.setHex(0x000000); }
+    if (selected) { applyHighlight(selected, false); }
     selected = null;
     document.getElementById('infoPanel').classList.add('d-none');
   }
@@ -346,6 +370,17 @@
     camera.lookAt(target);
     renderer.render(scene, camera);
   }
+
+  /* 调试钩子：供自动化测试/截图使用（不影响正常功能） */
+  window.__threeDebug = {
+    select: function (name) {
+      var b = null;
+      for (var i = 0; i < buildings.length; i++) {
+        if (buildings[i].userData && buildings[i].userData.name === name) { b = buildings[i]; break; }
+      }
+      if (b) { selectBuilding(b); } else { clearSelection(); }
+    }
+  };
 
   init();
 })();
