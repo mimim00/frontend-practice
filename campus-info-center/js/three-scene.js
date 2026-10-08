@@ -8,8 +8,8 @@
   'use strict';
 
   var stage, renderer, scene, camera, raycaster;
-  var buildings = [];      // 可点击的建筑网格
-  var footprints = [];     // 建筑占地（用于避让树木）
+  var buildings = [];      
+  var footprints = [];     
   var selected = null;
   var autoRotate = true;
   var theta = 0.65, phi = 1.08, radius = 240;
@@ -65,7 +65,7 @@
     }
   }
 
-  /* ==================== 灯光 ==================== */
+ //灯光
   function buildLights() {
     scene.add(new THREE.HemisphereLight(0xffffff, 0x9caf88, 0.95));
     var sun = new THREE.DirectionalLight(0xffffff, 1.05);
@@ -80,7 +80,7 @@
     scene.add(sun);
   }
 
-  /* ==================== 地面（草坪纹理 + 网格路网） ==================== */
+  //地面（草坪纹理 + 网格路网）
   function groundTexture() {
     var c = document.createElement('canvas');
     c.width = 512; c.height = 512;
