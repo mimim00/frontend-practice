@@ -9,7 +9,7 @@
   var App = (global.App = global.App || {});
 
   /* ---------- 1. JSON 数据加载（含完整的错误处理） ----------
-     统一入口：所有页面通过 App.loadJSON('data/xxx.json') 读取数据。
+     统一入口：页面通过 App.loadJSON('data/xxx.json') 读取数据。
      失败时给出对用户友好的中文错误信息，并支持"重试"。 */
   App.loadJSON = function (url) {
     return fetch(url, { cache: 'no-cache' })
