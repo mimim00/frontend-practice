@@ -30,7 +30,7 @@
     "building": "第一教学楼",
     "floor": 1,
     "seats": 60,
-    "available": 23,
+    "available": 22,
     "status": "open",
     "hours": "全天开放",
     "facilities": ["空调", "插座", "饮水机", "WiFi"]
