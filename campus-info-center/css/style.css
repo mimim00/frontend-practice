@@ -174,7 +174,7 @@ code { color: #8A6F4D; }
 /* ---------- 页脚 ---------- */
 .app-footer { background: #3B454E; color: #A9B2B9; font-size: .85rem; }
 .app-footer a { color: #C9D2D9; text-decoration: none; }
-.app-footer a:hover { color: #E8EDF0; }
+.app-footer a:hover { color: #d7dde0; }
 
 /* ---------- 响应式微调（Bootstrap 断点之外的细节） ---------- */
 @media (max-width: 767.98px) {

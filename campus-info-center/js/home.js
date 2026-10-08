@@ -30,7 +30,7 @@
 
   function render(data) {
     var ov = data.overview || {};
-    // 使用 jQuery 更新统计数字
+    // 使用 jQuery 更新统计
     $('#sRooms').text(ov.studyRooms ?? '--');
     $('#sOpen').text(ov.openRooms ?? '--');
     $('#sSeats').text(ov.availableSeats ?? '--');

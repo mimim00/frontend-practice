@@ -123,7 +123,7 @@
       { "name": "万州烤鱼", "category": "川菜", "price": 28, "rating": 4.7, "sales": 88 },
       { "name": "砂锅粥", "category": "汤类", "price": 12, "rating": 4.5, "sales": 150 },
       { "name": "烧烤", "category": "小吃", "price": 18, "rating": 4.6, "sales": 220 },
-      { "name": "精酿啤酒", "category": "饮品", "price": 8, "rating": 4.2, "sales": 170 }
+      { "name": "精酿米酒", "category": "饮品", "price": 8, "rating": 4.2, "sales": 170 }
     ]
   }
 ]

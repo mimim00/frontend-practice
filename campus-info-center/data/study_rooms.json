@@ -140,7 +140,7 @@
     "seats": 35,
     "available": 15,
     "status": "open",
-    "hours": "20:00-24:00",
+    "hours": "20:00-23:30",
     "facilities": ["插座", "WiFi"]
   }
 ]
