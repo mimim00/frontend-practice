@@ -35,7 +35,7 @@
     loadData();
   }
 
-  /* ---------- 数据加载（localStorage 优先，其次 JSON） ---------- */
+  /* --------数据加载（localStorage 优先，其次 JSON） ---------- */
   function loadData() {
     var area = document.getElementById('errorArea');
     App.clearError(area);
