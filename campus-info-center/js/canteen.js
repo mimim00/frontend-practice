@@ -139,7 +139,7 @@
     '</div>';
   }
 
-  /* ---------- 详情弹窗 ---------- */
+  
   function showDetail(id) {
     var c = canteens.find(function (x) { return x.id === id; });
     if (!c) { return; }

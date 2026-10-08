@@ -29,7 +29,7 @@
       });
   }
 
-  /* ---------- 顶部统计卡片 ---------- */
+  /* ---------- 顶部统计卡片 -------- */
   function renderStats(data) {
     var ov = data.overview || {};
     document.getElementById('dRooms').textContent = ov.studyRooms ?? '--';
@@ -48,7 +48,7 @@
   function renderCharts(data) {
     var c = data.charts || {};
 
-    /* ---------- 图1：柱状图 ---------- */
+    /* ---------- 图1：柱状图 -------- */
     var usageData = (c.buildingUsage || []).map(function (b) {
       return { name: b.name, total: b.total, available: b.available, usage: b.total ? +(100 * (b.total - b.available) / b.total).toFixed(1) : 0 };
     });
@@ -161,7 +161,7 @@
     }
   }
 
-  /* ---------- 自适应 ---------- */
+  /* ---------- 自适应 -------- */
   window.addEventListener('resize', function () {
     charts.forEach(function (c) { c.resize(); });
   });
