@@ -17,7 +17,7 @@
 
   var PHI_MIN = 0.35, PHI_MAX = 1.45, RADIUS_MIN = 90, RADIUS_MAX = 420;
 
-  /* ==================== 初始化入口 ==================== */
+  
   function init() {
     stage = document.getElementById('threeCanvas');
     if (!stage || typeof THREE === 'undefined') {
@@ -25,7 +25,7 @@
       return;
     }
 
-    // 捕获 WebGL 初始化异常（部分浏览器 / 显卡不支持）
+    
     try {
       renderer = new THREE.WebGLRenderer({ antialias: true });
     } catch (err) {
